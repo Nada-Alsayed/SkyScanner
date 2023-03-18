@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">SkyScanner</string>
+    <string name="slogan">Stay one step a head</string>
+    <string name="get_started">Get Started</string>
+    <string name="home">Home</string>
+    <string name="favourites">Favourites</string>
+    <string name="alerts">Alerts</string>
+    <string name="settings">Settings</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
