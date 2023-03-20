@@ -27,12 +27,11 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             app:headerLayout="@layout/nav_header"
-            android:background="#9A5C6A97"
+            android:background="#F35C6A97"
             app:itemIconSize="28dp"
             app:itemTextColor="#E8F6EDE9"
             app:itemIconTint="#E8F6EDE9"
             app:menu="@menu/nav_menu" />
-
     </androidx.drawerlayout.widget.DrawerLayout>
 
 
