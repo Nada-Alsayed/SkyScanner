@@ -38,6 +38,8 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
+
 
     //lotti animation
     def lottieVersion = "3.4.0"
