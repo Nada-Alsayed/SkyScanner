@@ -106,8 +106,8 @@
                     app:layout_constraintStart_toStartOf="@id/homeCard" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <FrameLayout
-                android:id="@+id/hourly"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/language"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="9dp"
@@ -118,25 +118,34 @@
                 app:layout_constraintTop_toBottomOf="@+id/homeCard">
 
                 <TextView
+                    android:id="@+id/textViewLanguage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
                     android:text="Hourly Forecast"
                     android:textColor="@color/white"
                     android:textSize="20dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/language" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/RVHourly"
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
-                    android:layout_marginTop="36dp"
-                    android:background="@drawable/home_rounded_bg"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewLanguage"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:itemCount="10"
                     tools:listitem="@layout/rv_row_hourly_temp" />
-            </FrameLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <FrameLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/daily"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -145,26 +154,36 @@
                 android:padding="10dp"
                 app:layout_constraintEnd_toEndOf="@id/guidelineRight"
                 app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-                app:layout_constraintTop_toBottomOf="@+id/hourly">
+                app:layout_constraintTop_toBottomOf="@+id/language">
 
                 <TextView
+                    android:id="@+id/textViewDay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
                     android:text="Daily Forecast"
                     android:textColor="@color/white"
                     android:textSize="20dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/daily"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/RVDaily"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="36dp"
-                    android:background="@drawable/home_rounded_bg"
                     android:orientation="vertical"
-                    tools:listitem="@layout/rv_row_daily_temp" />
-            </FrameLayout>
+                    tools:itemCount="10"
+                    tools:layout_editor_absoluteX="10dp"
+                    tools:layout_editor_absoluteY="-156dp"
+                    tools:listitem="@layout/rv_row_daily_temp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDay"
+                    app:layout_constraintVertical_bias="0.0"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
