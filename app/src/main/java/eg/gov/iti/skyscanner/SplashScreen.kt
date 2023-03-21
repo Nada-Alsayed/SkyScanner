@@ -6,6 +6,7 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import eg.gov.iti.skyscanner.databinding.ScreenSplashBinding
+import eg.gov.iti.skyscanner.mainactivity.view.MainActivity
 
 class SplashScreen : AppCompatActivity() {
     lateinit var bindingSplashScreen :ScreenSplashBinding

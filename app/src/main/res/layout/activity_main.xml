@@ -7,7 +7,7 @@
     android:background="@drawable/gradient_bg"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MainActivity"
+    tools:context=".mainactivity.view.MainActivity"
     xmlns:tools="http://schemas.android.com/tools">
         <include
             android:id="@+id/bar"

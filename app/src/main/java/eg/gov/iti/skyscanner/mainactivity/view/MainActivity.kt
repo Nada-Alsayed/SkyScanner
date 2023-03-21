@@ -1,4 +1,4 @@
-package eg.gov.iti.skyscanner
+package eg.gov.iti.skyscanner.mainactivity.view
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
+import eg.gov.iti.skyscanner.R
 import eg.gov.iti.skyscanner.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
