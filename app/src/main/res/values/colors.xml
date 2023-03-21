@@ -8,6 +8,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="trans_blue_settings">#5158699C</color>
+    <color name="nav_trans_blue">#F35C6A97</color>
+    <color name="trans_simon_ripple">#C4FFBDA9</color>
+    <color name="nav_item_color">#E8F6EDE9</color>
+
     <color name="my_blue">#5C6A97</color>
     <color name="my_simon">#E8FFBDA9</color>
 
