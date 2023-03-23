@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="9dp"
+    android:background="@drawable/home_rounded_bg"
+    android:padding="12dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgWind"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:scaleType="centerCrop"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/baseline_air_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtWind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="Sun"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+
+        app:layout_constraintEnd_toEndOf="@+id/imgWind"
+        app:layout_constraintStart_toStartOf="@+id/imgWind"
+        app:layout_constraintTop_toBottomOf="@+id/imgWind" />
+    <TextView
+        android:id="@+id/textWind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Wind"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/imgWind"
+        app:layout_constraintStart_toStartOf="@+id/imgWind"
+        app:layout_constraintTop_toBottomOf="@+id/txtWind" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgPressure"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/baseline_speed_24"
+        app:layout_constraintBottom_toBottomOf="@+id/imgWind"
+        app:layout_constraintEnd_toStartOf="@+id/imgHumidity"
+        app:layout_constraintStart_toEndOf="@id/imgWind"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtPressure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="Sun"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/imgPressure"
+        app:layout_constraintStart_toStartOf="@+id/imgPressure"
+        app:layout_constraintTop_toBottomOf="@+id/imgPressure" />
+
+    <TextView
+        android:id="@+id/textPressure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="5dp"
+        android:text="Pressure"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/imgPressure"
+        app:layout_constraintStart_toStartOf="@+id/imgPressure"
+        app:layout_constraintTop_toBottomOf="@+id/txtPressure" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgHumidity"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/baseline_water_drop_24"
+        app:layout_constraintBottom_toBottomOf="@+id/imgPressure"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtHumidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="Sun"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/imgHumidity"
+        app:layout_constraintStart_toStartOf="@+id/imgHumidity"
+        app:layout_constraintTop_toBottomOf="@+id/imgHumidity" />
+
+    <TextView
+        android:id="@+id/textHumidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Humidity"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/imgHumidity"
+        app:layout_constraintStart_toStartOf="@+id/imgHumidity"
+        app:layout_constraintTop_toBottomOf="@+id/txtHumidity" />
+
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgCloud"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:scaleType="centerCrop"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/baseline_cloud_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textWind" />
+
+    <TextView
+        android:id="@+id/txttCloud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="Sun"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/imgCloud"
+        app:layout_constraintStart_toStartOf="@+id/imgCloud"
+        app:layout_constraintTop_toBottomOf="@+id/imgCloud" />
+    <TextView
+        android:id="@+id/textCloud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Cloud"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/imgCloud"
+        app:layout_constraintStart_toStartOf="@+id/imgCloud"
+        app:layout_constraintTop_toBottomOf="@+id/txttCloud" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgVisibility"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:scaleType="centerCrop"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/baseline_visibility_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textHumidity" />
+
+    <TextView
+        android:id="@+id/txttVisibility"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="Sun"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/imgVisibility"
+        app:layout_constraintStart_toStartOf="@+id/imgVisibility"
+        app:layout_constraintTop_toBottomOf="@+id/imgVisibility" />
+    <TextView
+        android:id="@+id/textVisibility"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Visibility"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/imgVisibility"
+        app:layout_constraintStart_toStartOf="@+id/imgVisibility"
+        app:layout_constraintTop_toBottomOf="@+id/txttVisibility" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgUltraViolet"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+
+        android:layout_marginTop="10dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/baseline_radar_24"
+        app:layout_constraintEnd_toStartOf="@+id/imgVisibility"
+        app:layout_constraintStart_toEndOf="@id/imgCloud"
+        app:layout_constraintTop_toBottomOf="@id/textPressure" />
+
+    <TextView
+        android:id="@+id/txttUltraViolet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="Sun"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/imgUltraViolet"
+        app:layout_constraintStart_toStartOf="@+id/imgUltraViolet"
+        app:layout_constraintTop_toBottomOf="@+id/imgUltraViolet" />
+    <TextView
+        android:id="@+id/textUltraViolet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="UltraViolet"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/imgUltraViolet"
+        app:layout_constraintStart_toStartOf="@+id/imgUltraViolet"
+        app:layout_constraintTop_toBottomOf="@+id/txttUltraViolet" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

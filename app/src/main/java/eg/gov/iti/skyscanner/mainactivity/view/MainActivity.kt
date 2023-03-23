@@ -1,12 +1,9 @@
 package eg.gov.iti.skyscanner.mainactivity.view
 
 import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
-
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -20,19 +17,22 @@ class MainActivity : AppCompatActivity() {
     lateinit var toolbar: Toolbar
     lateinit var toggle: ActionBarDrawerToggle
     lateinit var dialog: Dialog
+
+    // lateinit var mTitle: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-       /* dialog= Dialog(this)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.weather_popup_win)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.show()*/
+        /* dialog= Dialog(this)
+         dialog.setCancelable(false)
+         dialog.setContentView(R.layout.weather_popup_win)
+         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+         dialog.show()*/
         //ToolBar
         toolbar = findViewById(R.id.toolBar)
         setSupportActionBar(toolbar)
+
         toggle = ActionBarDrawerToggle(
             this,
             binding.navDrawerLayout,
@@ -42,7 +42,11 @@ class MainActivity : AppCompatActivity() {
         )
         binding.navDrawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+        toolbar.setTitleTextColor(getColor(R.color.white))
 
+        //supportActionBar?.setCustomView(R.layout.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        //mTitle=toolbar.findViewById(R.id.toolbar_title)
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         NavigationUI.setupWithNavController(binding.navView, navController)
 
