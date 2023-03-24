@@ -38,6 +38,10 @@ android {
 }
 
 dependencies {
+    //gps location
+    implementation'com.google.android.gms:play-services-location:17.1.0'
+
+    //drawerLayout
     implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
 
 
