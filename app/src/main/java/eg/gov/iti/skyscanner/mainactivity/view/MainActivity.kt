@@ -30,12 +30,13 @@ class MainActivity : AppCompatActivity() {
         val preferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         // Get the value of onboarding_completed key. If it is not set, then it will return false
         val onBoardingCompleted = preferences.getBoolean("onboarding_completed", false)
+        val lat = preferences.getFloat("lat", 0F)
+        val lon = preferences.getFloat("lon", 0F)
         // Check the value of onboardingCompleted
         if (!onBoardingCompleted) {
             // Show OnboardingActivity because it is the first time user opens the app
             val intent = Intent(this, OnboardingActivity::class.java)
             startActivity(intent)
-            finish()
         } else {
             /*  Do something else because user has already completed onboarding
 

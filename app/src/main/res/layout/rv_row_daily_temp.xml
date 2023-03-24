@@ -8,7 +8,7 @@
     android:background="@drawable/rounded_button">
 
     <TextView
-        android:id="@+id/txtCountryName"
+        android:id="@+id/txtDayName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="13dp"
@@ -29,7 +29,7 @@
         android:scaleType="fitXY"
         android:src="@drawable/app_icon"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/txtCountryName"
+        app:layout_constraintStart_toEndOf="@+id/txtDayName"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.2"
         app:shapeAppearanceOverlay="@style/roundedImg" />

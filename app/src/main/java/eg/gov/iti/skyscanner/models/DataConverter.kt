@@ -1,6 +1,9 @@
 package eg.gov.iti.skyscanner.models
 
+import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseMethod
+import com.bumptech.glide.Glide
 
 object DataConverter {
     @InverseMethod("convertIntToString")
@@ -27,4 +30,9 @@ object DataConverter {
         return value.toString().toFloat()
 
     }
+
+}
+@BindingAdapter("imgUrl")
+fun loadImage(view: ImageView, url: String) {
+    Glide.with(view.context).load(url).into(view)
 }

@@ -173,6 +173,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:itemCount="10"
                     tools:layout_editor_absoluteX="10dp"
                     tools:layout_editor_absoluteY="-156dp"
