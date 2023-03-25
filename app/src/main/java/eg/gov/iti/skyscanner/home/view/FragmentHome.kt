@@ -55,6 +55,7 @@ class FragmentHome : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var lat= sharedPreference.getString("lat", "N/v")
+        //Toast.makeText(requireContext(), "hhhhomeh"+lat, Toast.LENGTH_SHORT).show()
         var lon =sharedPreference.getString("lon", "N/v")
 
         var actLat= lat?.toDoubleOrNull()
@@ -73,7 +74,7 @@ class FragmentHome : Fragment() {
 
         if (actLat != null) {
             if (actLon != null) {
-                viewModel.getRemoteWeather(actLat, actLon, "metric", "en", "783ffb0fa4b28b09291b839b6ad74d26")
+                viewModel.getRemoteWeather(actLat, actLon, "metric", "ar", "783ffb0fa4b28b09291b839b6ad74d26")
             }
         }
 
@@ -113,7 +114,7 @@ class FragmentHome : Fragment() {
     }
 
     private fun displayWeather(weatherDetail: WeatherDetail,lat:Double,lon:Double) {
-        Toast.makeText(requireContext(),"lon-"+lon.toString()+weatherDetail.lat.toString(),Toast.LENGTH_SHORT).show()
+       // Toast.makeText(requireContext(),"lon-"+lon.toString()+weatherDetail.lat.toString(),Toast.LENGTH_SHORT).show()
         val geocoder = Geocoder(requireContext(), Locale.getDefault())
         val addresses: MutableList<Address> =
             geocoder.getFromLocation(weatherDetail.lat,weatherDetail.lon, 1) as MutableList<Address>
@@ -127,7 +128,8 @@ class FragmentHome : Fragment() {
         binding.txttUltraViolet.text=weatherDetail.current.uvi.toString()
         binding.txttVisibility.text=weatherDetail.current.visibility.toString()
         if (addresses.isNotEmpty()) {
-            binding.txtLocate.text= addresses[0].countryName.toString()
+            binding.txtLocate.text= "${addresses[0].locality},${addresses[0].countryName}"
+           // ${addresses[0].adminArea},
         }else{
             Toast.makeText(requireContext(),"empty",Toast.LENGTH_SHORT).show()
         }

@@ -15,26 +15,24 @@ import com.google.android.gms.location.*
 import eg.gov.iti.skyscanner.databinding.ActivityOnboardingBinding
 import eg.gov.iti.skyscanner.mainactivity.view.MainActivity
 
-const val Permission_1 = 10
+//const val Permission_1 = 10
 
 class OnboardingActivity : AppCompatActivity() {
-    var lat: Double = 0.0
-    var lon: Double = 0.0
+    /*var lat: Double = 0.0
+    var lon: Double = 0.0*/
     lateinit var binding: ActivityOnboardingBinding
-    lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
+   // lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityOnboardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+//        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
         /*       val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
                val locationListener = LocationListener { TODO("Not yet implemented") }
        */
         binding.btnSetUpDone.setOnClickListener {
             if (binding.rbgps.isChecked) {
-                getLastLocation()
-
                 val preferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
                 preferences.edit().putBoolean("onboarding_completed", true).apply()
                 /* val x=lat.toString()
@@ -71,7 +69,7 @@ class OnboardingActivity : AppCompatActivity() {
     }*/
 
 
-    private fun checkPermissions(): Boolean {
+    /*private fun checkPermissions(): Boolean {
         val result = ActivityCompat.checkSelfPermission(
             this, android.Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
@@ -142,5 +140,5 @@ class OnboardingActivity : AppCompatActivity() {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
             LocationManager.NETWORK_PROVIDER
         )
-    }
+    }*/
 }
