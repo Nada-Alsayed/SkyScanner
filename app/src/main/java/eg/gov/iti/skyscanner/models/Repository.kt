@@ -21,9 +21,10 @@ class Repository private constructor(
         }
     }
 
+
     override suspend fun getRetrofitWeather(
-        lat: Float,
-        lon: Float,
+        lat: Double,
+        lon: Double,
         units: String,
         lang: String,
         apiKey: String

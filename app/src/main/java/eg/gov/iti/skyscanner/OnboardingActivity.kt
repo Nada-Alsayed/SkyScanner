@@ -18,29 +18,32 @@ import eg.gov.iti.skyscanner.mainactivity.view.MainActivity
 const val Permission_1 = 10
 
 class OnboardingActivity : AppCompatActivity() {
-    var lat:Double=0.0
-    var lon:Double=0.0
+    var lat: Double = 0.0
+    var lon: Double = 0.0
     lateinit var binding: ActivityOnboardingBinding
     lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityOnboardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
-        mFusedLocationProviderClient=LocationServices.getFusedLocationProviderClient(this)
-
- /*       val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val locationListener = LocationListener { TODO("Not yet implemented") }
-*/
+        /*       val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+               val locationListener = LocationListener { TODO("Not yet implemented") }
+       */
         binding.btnSetUpDone.setOnClickListener {
             if (binding.rbgps.isChecked) {
                 getLastLocation()
 
                 val preferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
                 preferences.edit().putBoolean("onboarding_completed", true).apply()
-                preferences.edit().putFloat("lat", lat.toFloat()).apply()
-                preferences.edit().putFloat("lon", lon.toFloat()).apply()
+                /* val x=lat.toString()
+                 val y=lon.toString()
+
+                 Toast.makeText(applicationContext,x+y,Toast.LENGTH_SHORT).show()
+
+                 preferences.edit().putString("lat", x).apply()
+                 preferences.edit().putString("lon", y).apply()*/
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -119,14 +122,14 @@ class OnboardingActivity : AppCompatActivity() {
         override fun onLocationResult(locationResult: LocationResult) {
             val mLastLocation: Location? = locationResult.lastLocation
             if (mLastLocation != null) {
-                lat=mLastLocation.latitude
-                Toast.makeText(applicationContext,"lat:$lat",Toast.LENGTH_SHORT).show()
-               // latTextView.text = mLastLocation.latitude.toString()
+                lat = mLastLocation.latitude
+                Toast.makeText(applicationContext, "lat:$lat", Toast.LENGTH_SHORT).show()
+                // latTextView.text = mLastLocation.latitude.toString()
             }
             if (mLastLocation != null) {
-                lon=mLastLocation.longitude
-                Toast.makeText(applicationContext,"lon:$lon",Toast.LENGTH_SHORT).show()
-             //   lonTextView.text = mLastLocation.longitude.toString()
+                lon = mLastLocation.longitude
+                Toast.makeText(applicationContext, "lon:$lon", Toast.LENGTH_SHORT).show()
+                //   lonTextView.text = mLastLocation.longitude.toString()
             }
 
 

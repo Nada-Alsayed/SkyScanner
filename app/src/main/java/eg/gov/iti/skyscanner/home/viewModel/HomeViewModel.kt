@@ -14,7 +14,7 @@ class HomeViewModel(private val repo: RepositoryInterface) : ViewModel() {
     private var stateShare = MutableStateFlow<RequestState>(RequestState.Loading)
     val weather =stateShare
 
-    fun getRemoteWeather(lat:Float,lon:Float,units:String,lang:String,apiKey:String)
+    fun getRemoteWeather(lat:Double,lon:Double,units:String,lang:String,apiKey:String)
     {
         viewModelScope.launch(Dispatchers.IO) {
 

@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="75dp"
-    android:layout_height="160dp"
+    android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:background="@drawable/rounded_button">
 
@@ -13,20 +13,21 @@
         android:layout_marginTop="8dp"
         android:textColor="@color/white"
         android:padding="10dp"
-        android:text="3 AM"
-        android:textSize="20dp"
+        android:hint="3 AM"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@+id/rvImgW"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <ImageView
         android:id="@+id/rvImgW"
-        android:layout_width="80dp"
+        android:layout_width="50dp"
         android:layout_height="50dp"
-        android:scaleType="fitXY"
         android:src="@drawable/app_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/rvTxtTemp"
         app:layout_constraintTop_toBottomOf="@+id/txtHour"
         app:shapeAppearanceOverlay="@style/roundedImg" />
 
@@ -37,7 +38,8 @@
         android:padding="10dp"
         android:text="13c"
         android:textColor="@color/white"
-        android:textSize="20dp"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rvImgW" />

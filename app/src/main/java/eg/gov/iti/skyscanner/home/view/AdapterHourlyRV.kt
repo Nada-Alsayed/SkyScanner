@@ -6,8 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import eg.gov.iti.skyscanner.databinding.RvRowHourlyTempBinding
+import eg.gov.iti.skyscanner.models.MyIcons
 import eg.gov.iti.skyscanner.models.WeatherDetail
 import java.time.Instant
 import java.time.ZoneId
@@ -19,6 +19,7 @@ class AdapterHourlyRV(
     val context: Context
 ) : RecyclerView.Adapter<AdapterHourlyRV.ViewHolder>() {
     private lateinit var binding: RvRowHourlyTempBinding
+     var icon: MyIcons=MyIcons()
 
     inner class ViewHolder(var binding: RvRowHourlyTempBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -31,7 +32,7 @@ class AdapterHourlyRV(
         return ViewHolder(binding)
     }
 
-    fun setList(list:WeatherDetail) {
+    fun setList(list: WeatherDetail) {
         weather = list
     }
 
@@ -42,14 +43,13 @@ class AdapterHourlyRV(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (weather != null) {
             var myHour: WeatherDetail.Hourly = weather.hourly[position]
-            Glide.with(context)
-                .load(myHour.weather.get(0).icon)
-                .into(holder.binding.rvImgW);
+            icon.replaceAPIIcon(myHour.weather.get(0).icon, holder.binding.rvImgW)
             holder.binding.rvTxtTemp.text = myHour.temp.toString()
-            holder.binding.txtHour.text = getCurrentTime( myHour.dt, weather.timezone)
+            holder.binding.txtHour.text = getCurrentTime(myHour.dt, weather.timezone)
 
         }
     }
+
     fun getCurrentTime(dt: Int, timezone: String, format: String = "K:mm a"): String {
         val zoneId = ZoneId.of(timezone)
         val instant = Instant.ofEpochSecond(dt.toLong())

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="10dp"
+    android:layout_margin="5dp"
     android:padding="3dp"
     android:background="@drawable/rounded_button">
 
@@ -15,21 +15,22 @@
         android:padding="10dp"
         android:text="Sun"
         android:textColor="@color/white"
-        android:textSize="24dp"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toStartOf="@+id/rvImgWDay"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
          />
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <ImageView
         android:id="@+id/rvImgWDay"
-        android:layout_width="70dp"
+        android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="13dp"
-        android:scaleType="fitXY"
         android:src="@drawable/app_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/txtDayName"
+        app:layout_constraintEnd_toStartOf="@+id/rvTxtTemp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.2"
         app:shapeAppearanceOverlay="@style/roundedImg" />
@@ -41,7 +42,8 @@
         android:padding="10dp"
         android:text="sunny"
         android:textColor="@color/white"
-        android:textSize="20dp"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toStartOf="@+id/rvNumTemp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/rvImgWDay"
         app:layout_constraintTop_toTopOf="parent"
@@ -55,7 +57,7 @@
         android:padding="10dp"
         android:text="13c"
         android:textColor="@color/white"
-        android:textSize="23dp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/rvTxtTemp"

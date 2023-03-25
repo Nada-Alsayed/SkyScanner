@@ -7,8 +7,8 @@ class APIClient private constructor() : RemoteSource {
         RetrofitHelper.RetrofitInstance.create(APIService::class.java)
     }
     override suspend fun getWeather(
-        lat: Float,
-        lon: Float,
+        lat: Double,
+        lon: Double,
         units: String,
         lang: String,
         apiKey: String

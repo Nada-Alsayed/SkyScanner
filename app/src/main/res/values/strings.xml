@@ -26,4 +26,10 @@
     <string name="header_daily_forecast">Daily Forecast</string>
     <string name="header_initial_setup">Initial SetUp</string>
     <string name="done">Done</string>
+    <string name="ultra_violet">Ultra Violet</string>
+    <string name="visibility">Visibility</string>
+    <string name="cloud">Cloud</string>
+    <string name="humidity">Humidity</string>
+    <string name="pressure">Pressure</string>
+    <string name="wind">Wind</string>
 </resources>
