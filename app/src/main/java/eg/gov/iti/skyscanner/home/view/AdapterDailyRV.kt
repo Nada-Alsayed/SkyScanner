@@ -50,7 +50,7 @@ class AdapterDailyRV(
                     holder.binding.rvNumTemp.text = "${myDay.temp.min.toInt()}/${myDay.temp.max.toInt()}°C"
                 }
                 "imperial" -> {
-                    holder.binding.rvNumTemp.text = "${myDay.temp.min.toInt()}/${myDay.temp.max}°F"
+                    holder.binding.rvNumTemp.text = "${myDay.temp.min.toInt()}/${myDay.temp.max.toInt()}°F"
                 }
                 else -> {
                     holder.binding.rvNumTemp.text = "${myDay.temp.min.toInt()}/${myDay.temp.max.toInt()}°K"
