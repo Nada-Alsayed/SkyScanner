@@ -15,6 +15,16 @@ class APIClient private constructor() : RemoteSource {
     ): WeatherDetail {
         return apiService.getWeather(lat,lon,units,lang,apiKey)
     }
+
+    override suspend fun getWeatherKelvin(
+        lat: Double,
+        lon: Double,
+        lang: String,
+        apiKey: String
+    ): WeatherDetail {
+        return apiService.getWeatherKelvin(lat,lon,lang,apiKey)
+    }
+
     companion object {
         private var instance: APIClient? = null
         fun getInstance(): APIClient {

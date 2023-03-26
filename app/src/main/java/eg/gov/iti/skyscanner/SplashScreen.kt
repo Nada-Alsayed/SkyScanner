@@ -10,11 +10,11 @@ import eg.gov.iti.skyscanner.mainactivity.view.MainActivity
 
 class SplashScreen : AppCompatActivity() {
     lateinit var bindingSplashScreen :ScreenSplashBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindingSplashScreen= ScreenSplashBinding.inflate(layoutInflater)
         setContentView(bindingSplashScreen.root)
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         Handler().postDelayed({
             val intent = Intent(this@SplashScreen, MainActivity::class.java)

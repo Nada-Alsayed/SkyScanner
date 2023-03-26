@@ -236,7 +236,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:scaleType="centerCrop"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="15dp"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/baseline_air_24"
                     app:layout_constraintStart_toStartOf="parent"
@@ -352,7 +352,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:scaleType="centerCrop"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="15dp"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/baseline_cloud_24"
                     app:layout_constraintStart_toStartOf="parent"
@@ -443,7 +443,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/imgUltraViolet" />
                 <TextView
                     android:textStyle="bold"
-
                     android:id="@+id/textUltraViolet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

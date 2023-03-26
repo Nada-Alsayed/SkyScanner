@@ -14,7 +14,8 @@ import java.util.*
 
 class AdapterDailyRV(
     var weather: WeatherDetail,
-    val context: Context
+    val context: Context,
+    val unit:String
 ) : RecyclerView.Adapter<AdapterDailyRV.ViewHolder>() {
     var icon: MyIcons=MyIcons()
     private lateinit var binding: RvRowDailyTempBinding
@@ -44,7 +45,18 @@ class AdapterDailyRV(
             icon.replaceAPIIcon(myDay.weather.get(0).icon, holder.binding.rvImgWDay)
             holder.binding.txtDayName.text = getDay(myDay.dt)
             holder.binding.rvTxtTemp.text = myDay.weather.get(0).description
-            holder.binding.rvNumTemp.text = myDay.temp.day.toString()
+            when (unit) {
+                "metric" -> {
+                    holder.binding.rvNumTemp.text = "${myDay.temp.min.toInt()}/${myDay.temp.max.toInt()}°C"
+                }
+                "imperial" -> {
+                    holder.binding.rvNumTemp.text = "${myDay.temp.min.toInt()}/${myDay.temp.max}°F"
+                }
+                else -> {
+                    holder.binding.rvNumTemp.text = "${myDay.temp.min.toInt()}/${myDay.temp.max.toInt()}°K"
+                }
+            }
+
 
         }
     }

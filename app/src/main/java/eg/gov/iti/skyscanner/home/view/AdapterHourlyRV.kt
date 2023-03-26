@@ -16,7 +16,8 @@ import java.util.*
 
 class AdapterHourlyRV(
     var weather: WeatherDetail,
-    val context: Context
+    val context: Context,
+    val unit:String
 ) : RecyclerView.Adapter<AdapterHourlyRV.ViewHolder>() {
     private lateinit var binding: RvRowHourlyTempBinding
      var icon: MyIcons=MyIcons()
@@ -44,9 +45,19 @@ class AdapterHourlyRV(
         if (weather != null) {
             var myHour: WeatherDetail.Hourly = weather.hourly[position]
             icon.replaceAPIIcon(myHour.weather.get(0).icon, holder.binding.rvImgW)
-            holder.binding.rvTxtTemp.text = myHour.temp.toString()
             holder.binding.txtHour.text = getCurrentTime(myHour.dt, weather.timezone)
-
+            holder.binding.rvTxtTemp.text = myHour.temp.toInt().toString()
+            when (unit) {
+                "metric" -> {
+                    holder.binding.rvTxtTemp.text = "${myHour.temp.toInt()}°C"
+                }
+                "imperial" -> {
+                    holder.binding.rvTxtTemp.text = "${myHour.temp.toInt()}°F"
+                }
+                else -> {
+                    holder.binding.rvTxtTemp.text = "${myHour.temp.toInt()}°K"
+                }
+            }
         }
     }
 

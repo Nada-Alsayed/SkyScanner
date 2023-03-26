@@ -32,5 +32,14 @@ class Repository private constructor(
         return flowOf(remoteSource.getWeather(lat,lon,units,lang, apiKey))
     }
 
+    override suspend fun getRetrofitWeatherKelvin(
+        lat: Double,
+        lon: Double,
+        lang: String,
+        apiKey: String
+    ): Flow<WeatherDetail>? {
+        return flowOf(remoteSource.getWeatherKelvin(lat,lon,lang, apiKey))
+    }
+
 
 }

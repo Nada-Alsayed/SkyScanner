@@ -1,14 +1,25 @@
 package eg.gov.iti.skyscanner.settings.view
 
 import android.app.Activity
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import eg.gov.iti.skyscanner.R
+import eg.gov.iti.skyscanner.databinding.FragmentSettingBinding
+
+const val Language = "lang"
+const val Unit = "unit"
+const val Notification = "notification"
+const val Location = "location"
 
 class FragmentSetting : Fragment() {
+    lateinit var binding: FragmentSettingBinding
+    lateinit var sharedPreference: SharedPreferences
+    lateinit var editor: SharedPreferences.Editor
     override fun onResume() {
         super.onResume()
         val activity: Activity? = activity
@@ -17,17 +28,121 @@ class FragmentSetting : Fragment() {
 
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        sharedPreference = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        editor = sharedPreference.edit()
+
+        var lang = sharedPreference.getString(Language, "en")
+        var temp = sharedPreference.getString(Unit, "metric")
+        var notif = sharedPreference.getString(Notification, "enable")
+        var loca = sharedPreference.getString(Location, "gps")
+
+        when (lang) {
+            "en" -> {
+                binding.rgLang.check(R.id.rbEnglish)
+            }
+            else-> {
+                binding.rgLang.check(R.id.rbArabic)
+            }
+        }
+        when (temp) {
+            "metric" -> {
+                binding.rgTemperature.check(R.id.rbCelsius)
+            }
+            "imperial" -> {
+                binding.rgTemperature.check(R.id.rbFahrenheit)
+            }
+           else -> {
+               binding.rgTemperature.check(R.id.rbKelvin)
+            }
+        }
+
+        when (notif) {
+            "enable" -> {
+                binding.rgNotification.check(R.id.rbEnable)
+            }
+            else -> {
+                binding.rgNotification.check(R.id.rbDisable)
+            }
+        }
+
+        when (loca) {
+            "gps" -> {
+                binding.rgLocation.check(R.id.rbGPS)
+            }
+            else -> {
+                binding.rgLocation.check(R.id.rbMap)
+            }
+        }
+
+        binding.rgLang.setOnCheckedChangeListener { radioGroup, optionId ->
+            run {
+                when (optionId) {
+                    R.id.rbArabic -> {
+                        editor.putString(Language, "ar").apply()
+                    }
+                    R.id.rbEnglish -> {
+                        editor.putString(Language, "en").apply()
+                    }
+                }
+            }
+        }
+
+        binding.rgTemperature.setOnCheckedChangeListener { radioGroup, optionId ->
+            run {
+                when (optionId) {
+                    R.id.rbCelsius -> {
+                        editor.putString(Unit, "metric").apply()
+                    }
+                    R.id.rbFahrenheit -> {
+                        editor.putString(Unit, "imperial").apply()
+                    }
+                    R.id.rbKelvin -> {
+                        editor.putString(Unit, "kelvin").apply()
+                    }
+                }
+            }
+        }
+
+        binding.rgLocation.setOnCheckedChangeListener { radioGroup, optionId ->
+            run {
+                when (optionId) {
+                    R.id.rbGPS -> {
+                        editor.putString(Location, "gps").apply()
+                    }
+                    R.id.rbMap -> {
+                        editor.putString(Location, "map").apply()
+                    }
+                }
+            }
+        }
+
+        binding.rgNotification.setOnCheckedChangeListener { radioGroup, optionId ->
+            run {
+                when (optionId) {
+                    R.id.rbEnable -> {
+                        editor.putString(Notification, "enable").apply()
+                    }
+                    R.id.rbDisable -> {
+                        editor.putString(Notification, "disable").apply()
+                    }
+                }
+            }
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_setting, container, false)
+        binding = FragmentSettingBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
 }

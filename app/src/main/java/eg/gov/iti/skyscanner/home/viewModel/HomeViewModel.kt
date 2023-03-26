@@ -24,4 +24,14 @@ class HomeViewModel(private val repo: RepositoryInterface) : ViewModel() {
             }
         }
     }
+    fun getRemoteWeatherKelvin(lat:Double,lon:Double,lang:String,apiKey:String)
+    {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            repo.getRetrofitWeatherKelvin(lat,lon,lang, apiKey)?.catch {
+                    e->stateShare.value=RequestState.Failure(e) }?.collect{
+                    data->stateShare.value=RequestState.Success(data)
+            }
+        }
+    }
 }
