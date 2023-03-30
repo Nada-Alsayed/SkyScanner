@@ -3,10 +3,9 @@ package eg.gov.iti.skyscanner.home.view
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.Configuration
 import android.location.Address
 import android.location.Geocoder
-import android.location.GnssMeasurement
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -72,59 +71,100 @@ class FragmentHome : Fragment() {
         //checkLang(lang)
         viewModelFactory = HomeViewModelFactory(
             Repository.getInstance(
-                APIClient.getInstance(),
-                ConcreteLocalSource(requireContext())
+                APIClient.getInstance(), ConcreteLocalSource(requireContext())
             )
         )
-
         viewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
-       // getSiutableData(lat, lon, lang, unit)
-        getSiutableData(33.44, -94.04, lang, unit)
-        lifecycleScope.launch() {
-            viewModel.weather.collect { result ->
-                when (result) {
-                    is RequestState.Loading -> {
-                        binding.scrollView.visibility = View.GONE
-                        binding.iconFail.visibility = View.GONE
-                        binding.pBar.visibility = View.VISIBLE
+        if (isNetworkAvailable(requireContext())) {
+            getSiutableData(lat, lon, lang, unit)
+            // getSiutableData(33.44, -94.04, lang, unit)
+            lifecycleScope.launch() {
+                viewModel.weather.collect { result ->
+                    when (result) {
+                        is RequestState.Loading -> {
+                            binding.scrollView.visibility = View.GONE
+                            binding.iconFail.visibility = View.GONE
+                            binding.pBar.visibility = View.VISIBLE
+                        }
+                        is RequestState.Success -> {
+                            binding.scrollView.visibility = View.VISIBLE
+                            binding.pBar.visibility = View.GONE
+                            binding.iconFail.visibility = View.GONE
+                            viewModel.deleteAll()
+                            viewModel.insertWeather(result.data)
+                            if (unit != null) {
+                                displayRVHour(result.data, unit)
+                                displayRVDay(result.data, unit)
+                                if (measureUnit != null) {
+                                    displayWeather(result.data, unit, measureUnit)
+                                }
+                            }
+
+                        }
+                        else -> {
+                            binding.scrollView.visibility = View.GONE
+                            binding.pBar.visibility = View.GONE
+                            binding.iconFail.visibility = View.VISIBLE
+                            Toast.makeText(
+                                requireContext(),
+                                "Check Your Internet Connection",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
-                    is RequestState.Success -> {
-                        binding.scrollView.visibility = View.VISIBLE
-                        binding.pBar.visibility = View.GONE
-                        binding.iconFail.visibility = View.GONE
-                        viewModel.deleteAll()
-                        viewModel.insertWeather(result.data)
+                }
+
+            }
+        }
+        else {
+             /*Snackbar.make(binding.root, "you're offline, Check your network", Snackbar.LENGTH_LONG)
+                 .show()*/
+            Toast.makeText(
+                requireContext(),
+                "you're offline, Check your network",
+                Toast.LENGTH_SHORT
+            )
+                .show()
+
+            viewModel.getStoredWeather()
+            lifecycleScope.launch {
+                viewModel.allWeatherFromRoom.collect() { db ->
+                    if (db != null) {
+                        val weather = WeatherDetail(
+                            db[0].alerts,
+                            db[0].current,
+                            db[0].daily,
+                            db[0].hourly,
+                            db[0].lat,
+                            db[0].lon,
+                            db[0].timezone,
+                            db[0].timezone_offset,
+                            db[0].isFav
+                        )
                         if (unit != null) {
-                            displayRVHour(result.data, unit)
-                            displayRVDay(result.data, unit)
+                            displayRVHour(weather, unit)
+                            displayRVDay(weather, unit)
                             if (measureUnit != null) {
-                                displayWeather(result.data, unit,measureUnit)
+                                displayWeather(weather, unit, measureUnit)
                             }
                         }
-
-                    }
-                    else -> {
-                        binding.scrollView.visibility = View.GONE
-                        binding.pBar.visibility = View.GONE
-                        binding.iconFail.visibility = View.VISIBLE
-                        Toast.makeText(
-                            requireContext(), "Check Your Internet Connection",
-                            Toast.LENGTH_SHORT
-                        ).show()
                     }
                 }
             }
-
         }
+
     }
+
     fun convertWindSpeedMpS(mph: Double): Double {
         val mps = mph / 2.23694 // conversion factor from mph to m/s
         return mps
     }
+
     fun convertWindSpeedMpH(mps: Double): Double {
         val mph = mps * 2.23694 // conversion factor from m/s to mph
         return mph
     }
+
     private fun getSiutableData(lat: Double?, lon: Double?, lang: String?, unit: String?) {
 //        var currentLang:String
 //        var currentUnit:String
@@ -135,10 +175,7 @@ class FragmentHome : Fragment() {
                     if (lang != null) {
                         if (unit != null) {
                             viewModel.getRemoteWeatherKelvin(
-                                lat,
-                                lon,
-                                lang,
-                                "783ffb0fa4b28b09291b839b6ad74d26"
+                                lat, lon, lang, "783ffb0fa4b28b09291b839b6ad74d26"
                             )
                         }
                     }
@@ -150,11 +187,7 @@ class FragmentHome : Fragment() {
                     if (lang != null) {
                         if (unit != null) {
                             viewModel.getRemoteWeather(
-                                lat,
-                                lon,
-                                unit,
-                                lang,
-                                "783ffb0fa4b28b09291b839b6ad74d26"
+                                lat, lon, unit, lang, "783ffb0fa4b28b09291b839b6ad74d26"
                             )
                         }
                     }
@@ -163,15 +196,12 @@ class FragmentHome : Fragment() {
         }
     }
 
-    private fun displayWeather(weatherDetail: WeatherDetail, unit: String,measurement: String) {
+    private fun displayWeather(weatherDetail: WeatherDetail, unit: String, measurement: String) {
         //Toast.makeText(requireContext(),"lon-"+lon.toString()+weatherDetail.lat.toString(),Toast.LENGTH_SHORT).show()
         val geocoder = Geocoder(requireContext(), Locale.getDefault())
-        val addresses: MutableList<Address> =
-            geocoder.getFromLocation(
-                weatherDetail.lat,
-                weatherDetail.lon,
-                1
-            ) as MutableList<Address>
+        val addresses: MutableList<Address> = geocoder.getFromLocation(
+            weatherDetail.lat, weatherDetail.lon, 1
+        ) as MutableList<Address>
         icon.replaceAPIIcon(weatherDetail.current.weather[0].icon, binding.imgW)
         binding.txtTempState.text = weatherDetail.current.weather[0].description
 
@@ -183,29 +213,29 @@ class FragmentHome : Fragment() {
         when (unit) {
             "metric" -> {
                 binding.txtTemp.text = "${weatherDetail.current.temp}°C"
-                if(measurement.equals("m/s")){
+                if (measurement.equals("m/s")) {
                     binding.txtWind.text = "${weatherDetail.current.wind_speed} m/s"
-                }
-                else{
-                    binding.txtWind.text = "${convertWindSpeedMpH(weatherDetail.current.wind_speed).toInt()} m/h"
+                } else {
+                    binding.txtWind.text =
+                        "${convertWindSpeedMpH(weatherDetail.current.wind_speed).toInt()} m/h"
                 }
             }
             "imperial" -> {
                 binding.txtTemp.text = "${weatherDetail.current.temp}°f"
-                if(measurement.equals("m/s")){
-                    binding.txtWind.text = "${convertWindSpeedMpS(weatherDetail.current.wind_speed).toInt()} m/s"
-                }
-                else{
+                if (measurement.equals("m/s")) {
+                    binding.txtWind.text =
+                        "${convertWindSpeedMpS(weatherDetail.current.wind_speed).toInt()} m/s"
+                } else {
                     binding.txtWind.text = "${weatherDetail.current.wind_speed} m/h"
                 }
             }
             else -> {
                 binding.txtTemp.text = "${weatherDetail.current.temp}°k"
-                if(measurement.equals("m/s")){
+                if (measurement.equals("m/s")) {
                     binding.txtWind.text = "${weatherDetail.current.wind_speed} m/s"
-                }
-                else{
-                    binding.txtWind.text = "${convertWindSpeedMpH(weatherDetail.current.wind_speed).toInt()} m/h"
+                } else {
+                    binding.txtWind.text =
+                        "${convertWindSpeedMpH(weatherDetail.current.wind_speed).toInt()} m/h"
                 }
             }
         }
@@ -231,11 +261,16 @@ class FragmentHome : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return connectivityManager.activeNetworkInfo != null && connectivityManager.activeNetworkInfo!!.isConnected
     }
 
     /*fun checkLang(lang: String?) {

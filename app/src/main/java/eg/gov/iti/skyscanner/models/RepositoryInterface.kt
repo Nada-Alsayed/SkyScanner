@@ -3,7 +3,9 @@ package eg.gov.iti.skyscanner.models
 import kotlinx.coroutines.flow.Flow
 
 interface RepositoryInterface {
-    suspend fun getStoredWeather():List<WeatherDetail>
+
+   // suspend fun getStoredWeather():Flow<WeatherDetail>?
+    suspend fun getStoredWeather():List<WeatherDetail>?
     suspend fun deleteAll()
     suspend fun deleteWeather(weatherDetail: WeatherDetail)
     suspend fun insertWeather(weatherDetail: WeatherDetail)

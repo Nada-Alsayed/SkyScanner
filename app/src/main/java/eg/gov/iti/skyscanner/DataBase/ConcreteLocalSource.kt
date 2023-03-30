@@ -8,7 +8,7 @@ class ConcreteLocalSource (context: Context): LocalSource {
         val dp:DataBase=DataBase.getInstance(context)
         dp.getDAO()
     }
-    override suspend fun allStoredWeather(): List<WeatherDetail> {
+    override suspend fun allStoredWeather():List<WeatherDetail>{
         return dao.getStoredWeather()
     }
     override suspend fun insertWeather(weatherDetail: WeatherDetail) {

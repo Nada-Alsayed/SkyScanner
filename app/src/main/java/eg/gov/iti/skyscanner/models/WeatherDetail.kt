@@ -1,10 +1,11 @@
 package eg.gov.iti.skyscanner.models
 
+import androidx.annotation.Nullable
 import androidx.room.Entity
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.google.gson.Gson
-
+import com.google.gson.reflect.TypeToken
 
 
 @Entity(tableName="weather",primaryKeys = ["lat", "lon","isFav"])
@@ -172,9 +173,38 @@ class WeatherTypeConverter {
     @TypeConverter
     fun fromStringToWeather(weatherString : String) = Gson().fromJson(weatherString, Array<WeatherDetail.Current.Weather>::class.java).toList()
 
+   /* @TypeConverter
+    fun fromAlertToString(alert: List<WeatherDetail.Alert>?):String? {
+        return alert?.let {
+            val gson=Gson()
+            gson.toJson(alert)
+        }
+    }
     @TypeConverter
-    fun fromAlertToString(alert: List<WeatherDetail.Alert>) = Gson().toJson(alert)
+    fun fromStringToAlerts(alertString : String?):WeatherDetail.Alert? {
+        return alertString?.let {
+            val gson=Gson()
+            gson.fromJson(it,WeatherDetail.Alert::class.java)
+        }
+    }*/
+   @TypeConverter
+   fun fromString(value: String?): List<WeatherDetail.Alert>? {
+       if (value == null || value.isEmpty()) {
+           return null
+       }
+       val listType = object : TypeToken<List<WeatherDetail.Alert>>() {}.type
+       return Gson().fromJson(value, listType)
+   }
+  /*  @TypeConverter
+    fun fromString(value: String?): List<WeatherDetail.Alert> {
+        val listType = object : TypeToken<List<WeatherDetail.Alert>>() {}.type
+        return Gson().fromJson(value, listType)
+    }*/
+
     @TypeConverter
-    fun fromStringToAlerts(alertString : String) = Gson().fromJson(alertString, Array<WeatherDetail.Alert>::class.java).toList()
+    fun fromList(list: List<WeatherDetail.Alert>?): String {
+        val gson = Gson()
+        return gson.toJson(list)
+    }
 
 }

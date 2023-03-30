@@ -20,9 +20,12 @@ class Repository private constructor(
             }
         }
     }
-    override suspend fun getStoredWeather(): List<WeatherDetail> {
+    override suspend fun getStoredWeather(): List<WeatherDetail>? {
         return localSource.allStoredWeather()
     }
+    /*override suspend fun getStoredWeather(): Flow<WeatherDetail>? {
+        return flowOf( localSource.allStoredWeather())
+    }*/
     override suspend fun deleteAll() {
         return localSource.deleteAllWeather()
     }
