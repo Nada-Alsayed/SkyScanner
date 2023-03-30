@@ -3,8 +3,10 @@ package eg.gov.iti.skyscanner.home.view
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.location.Address
 import android.location.Geocoder
+import android.location.GnssMeasurement
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import eg.gov.iti.skyscanner.DataBase.ConcreteLocalSource
-import eg.gov.iti.skyscanner.R
 import eg.gov.iti.skyscanner.databinding.FragmentHomeBinding
 import eg.gov.iti.skyscanner.home.viewModel.HomeViewModel
 import eg.gov.iti.skyscanner.home.viewModel.HomeViewModelFactory
@@ -24,12 +25,14 @@ import eg.gov.iti.skyscanner.models.WeatherDetail
 import eg.gov.iti.skyscanner.network.APIClient
 import eg.gov.iti.skyscanner.network.RequestState
 import eg.gov.iti.skyscanner.settings.view.Language
-import eg.gov.iti.skyscanner.settings.view.Unit
+import eg.gov.iti.skyscanner.settings.view.MeasureUnit
+import eg.gov.iti.skyscanner.settings.view.TempUnit
 import kotlinx.coroutines.launch
 import java.util.*
 
-const val Latitude="lat"
-const val Longitude="lon"
+const val Latitude = "lat"
+const val Longitude = "lon"
+
 class FragmentHome : Fragment() {
     lateinit var binding: FragmentHomeBinding
     lateinit var adapterDailyRV: AdapterDailyRV
@@ -39,6 +42,7 @@ class FragmentHome : Fragment() {
     lateinit var sharedPreference: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
     var icon: MyIcons = MyIcons()
+    var lang: String = ""
 
     override fun onResume() {
         super.onResume()
@@ -60,11 +64,12 @@ class FragmentHome : Fragment() {
         var lat = sharedPreference.getString(Latitude, "N/v")?.toDoubleOrNull()
         var lon = sharedPreference.getString(Longitude, "N/v")?.toDoubleOrNull()
 
-        var lang = sharedPreference.getString(Language, "en")
-        var unit = sharedPreference.getString(Unit, "metric")
+        var lang = sharedPreference.getString(Language, "ar")
+        var unit = sharedPreference.getString(TempUnit, "metric")
+        var measureUnit = sharedPreference.getString(MeasureUnit, "m/s")
 
-        Toast.makeText(requireContext(),"unit-"+unit,Toast.LENGTH_SHORT).show()
-
+        Toast.makeText(requireContext(), "lat-" + lat, Toast.LENGTH_SHORT).show()
+        //checkLang(lang)
         viewModelFactory = HomeViewModelFactory(
             Repository.getInstance(
                 APIClient.getInstance(),
@@ -73,8 +78,8 @@ class FragmentHome : Fragment() {
         )
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
-        getSiutableData(lat,lon,lang,unit)
-
+       // getSiutableData(lat, lon, lang, unit)
+        getSiutableData(33.44, -94.04, lang, unit)
         lifecycleScope.launch() {
             viewModel.weather.collect { result ->
                 when (result) {
@@ -87,10 +92,14 @@ class FragmentHome : Fragment() {
                         binding.scrollView.visibility = View.VISIBLE
                         binding.pBar.visibility = View.GONE
                         binding.iconFail.visibility = View.GONE
+                        viewModel.deleteAll()
+                        viewModel.insertWeather(result.data)
                         if (unit != null) {
                             displayRVHour(result.data, unit)
                             displayRVDay(result.data, unit)
-                            displayWeather(result.data, unit)
+                            if (measureUnit != null) {
+                                displayWeather(result.data, unit,measureUnit)
+                            }
                         }
 
                     }
@@ -108,11 +117,18 @@ class FragmentHome : Fragment() {
 
         }
     }
-
+    fun convertWindSpeedMpS(mph: Double): Double {
+        val mps = mph / 2.23694 // conversion factor from mph to m/s
+        return mps
+    }
+    fun convertWindSpeedMpH(mps: Double): Double {
+        val mph = mps * 2.23694 // conversion factor from m/s to mph
+        return mph
+    }
     private fun getSiutableData(lat: Double?, lon: Double?, lang: String?, unit: String?) {
 //        var currentLang:String
 //        var currentUnit:String
-    //    Toast.makeText(requireContext(),"unit : "+unit,Toast.LENGTH_SHORT).show()
+        //    Toast.makeText(requireContext(),"unit : "+unit,Toast.LENGTH_SHORT).show()
         if (unit.equals("kelvin")) {
             if (lat != null) {
                 if (lon != null) {
@@ -128,8 +144,7 @@ class FragmentHome : Fragment() {
                     }
                 }
             }
-        }
-        else {
+        } else {
             if (lat != null) {
                 if (lon != null) {
                     if (lang != null) {
@@ -147,8 +162,9 @@ class FragmentHome : Fragment() {
             }
         }
     }
-    private fun displayWeather(weatherDetail: WeatherDetail, unit: String) {
-         //Toast.makeText(requireContext(),"lon-"+lon.toString()+weatherDetail.lat.toString(),Toast.LENGTH_SHORT).show()
+
+    private fun displayWeather(weatherDetail: WeatherDetail, unit: String,measurement: String) {
+        //Toast.makeText(requireContext(),"lon-"+lon.toString()+weatherDetail.lat.toString(),Toast.LENGTH_SHORT).show()
         val geocoder = Geocoder(requireContext(), Locale.getDefault())
         val addresses: MutableList<Address> =
             geocoder.getFromLocation(
@@ -158,21 +174,39 @@ class FragmentHome : Fragment() {
             ) as MutableList<Address>
         icon.replaceAPIIcon(weatherDetail.current.weather[0].icon, binding.imgW)
         binding.txtTempState.text = weatherDetail.current.weather[0].description
-        binding.txtWind.text = weatherDetail.current.wind_speed.toString()
+
         binding.txtPressure.text = "${weatherDetail.current.pressure} hpa"
-        binding.txtHumidity.text = "${weatherDetail.current.humidity}%"
-        binding.txttCloud.text ="${weatherDetail.current.clouds}%"
+        binding.txtHumidity.text = "${weatherDetail.current.humidity} %"
+        binding.txttCloud.text = "${weatherDetail.current.clouds} %"
         binding.txttUltraViolet.text = weatherDetail.current.uvi.toString()
-        binding.txttVisibility.text = "${weatherDetail.current.visibility}"
+        binding.txttVisibility.text = "${weatherDetail.current.visibility} m"
         when (unit) {
             "metric" -> {
                 binding.txtTemp.text = "${weatherDetail.current.temp}°C"
+                if(measurement.equals("m/s")){
+                    binding.txtWind.text = "${weatherDetail.current.wind_speed} m/s"
+                }
+                else{
+                    binding.txtWind.text = "${convertWindSpeedMpH(weatherDetail.current.wind_speed).toInt()} m/h"
+                }
             }
             "imperial" -> {
                 binding.txtTemp.text = "${weatherDetail.current.temp}°f"
+                if(measurement.equals("m/s")){
+                    binding.txtWind.text = "${convertWindSpeedMpS(weatherDetail.current.wind_speed).toInt()} m/s"
+                }
+                else{
+                    binding.txtWind.text = "${weatherDetail.current.wind_speed} m/h"
+                }
             }
             else -> {
                 binding.txtTemp.text = "${weatherDetail.current.temp}°k"
+                if(measurement.equals("m/s")){
+                    binding.txtWind.text = "${weatherDetail.current.wind_speed} m/s"
+                }
+                else{
+                    binding.txtWind.text = "${convertWindSpeedMpH(weatherDetail.current.wind_speed).toInt()} m/h"
+                }
             }
         }
 
@@ -185,14 +219,17 @@ class FragmentHome : Fragment() {
         }
 
     }
-    private fun displayRVDay(weatherDetail: WeatherDetail,unit: String) {
-        adapterDailyRV = AdapterDailyRV(weatherDetail, requireContext(),unit)
+
+    private fun displayRVDay(weatherDetail: WeatherDetail, unit: String) {
+        adapterDailyRV = AdapterDailyRV(weatherDetail, requireContext(), unit)
         binding.RVDaily.adapter = adapterDailyRV
     }
-    private fun displayRVHour(weatherDetail: WeatherDetail,unit: String) {
-        adapterHourlyRV = AdapterHourlyRV(weatherDetail, requireContext(),unit)
+
+    private fun displayRVHour(weatherDetail: WeatherDetail, unit: String) {
+        adapterHourlyRV = AdapterHourlyRV(weatherDetail, requireContext(), unit)
         binding.RVHourly.adapter = adapterHourlyRV
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -200,4 +237,13 @@ class FragmentHome : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+    /*fun checkLang(lang: String?) {
+        val locale = Locale(lang)
+
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.locale = locale
+        this.resources.updateConfiguration(config, this.resources.displayMetrics)
+    }*/
 }

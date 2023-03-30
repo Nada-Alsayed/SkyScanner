@@ -20,8 +20,18 @@ class Repository private constructor(
             }
         }
     }
-
-
+    override suspend fun getStoredWeather(): List<WeatherDetail> {
+        return localSource.allStoredWeather()
+    }
+    override suspend fun deleteAll() {
+        return localSource.deleteAllWeather()
+    }
+    override suspend fun deleteWeather(weatherDetail: WeatherDetail) {
+        return localSource.deleteWeather(weatherDetail)
+    }
+    override suspend fun insertWeather(weatherDetail: WeatherDetail) {
+        return localSource.insertWeather(weatherDetail)
+    }
     override suspend fun getRetrofitWeather(
         lat: Double,
         lon: Double,
@@ -31,7 +41,6 @@ class Repository private constructor(
     ): Flow<WeatherDetail>? {
         return flowOf(remoteSource.getWeather(lat,lon,units,lang, apiKey))
     }
-
     override suspend fun getRetrofitWeatherKelvin(
         lat: Double,
         lon: Double,
@@ -40,6 +49,4 @@ class Repository private constructor(
     ): Flow<WeatherDetail>? {
         return flowOf(remoteSource.getWeatherKelvin(lat,lon,lang, apiKey))
     }
-
-
 }

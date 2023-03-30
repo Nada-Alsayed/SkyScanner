@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -20,11 +21,14 @@ import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import eg.gov.iti.skyscanner.R
 import com.google.android.gms.location.*
+import eg.gov.iti.skyscanner.LanguageManager
 import eg.gov.iti.skyscanner.OnBoardingActivity
 import eg.gov.iti.skyscanner.OnBoardingPref
 import eg.gov.iti.skyscanner.databinding.ActivityMainBinding
 import eg.gov.iti.skyscanner.home.view.Latitude
 import eg.gov.iti.skyscanner.home.view.Longitude
+import eg.gov.iti.skyscanner.settings.view.Language
+import java.util.*
 
 const val Permission_1 = 10
 class MainActivity : AppCompatActivity() {
@@ -42,9 +46,20 @@ class MainActivity : AppCompatActivity() {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-
+        val language=sharedPreferences.getString(Language,"ar")
+        checkLang(language)
         val onBoardingCompleted = sharedPreferences.getBoolean(OnBoardingPref, false)
-
+       /* if (language.equals("ar"))
+        {
+            LanguageManager.setLanguage(this,"ar")
+            finish()
+            startActivity(intent)
+        }
+        else{
+            LanguageManager.setLanguage(this,"en")
+            finish()
+            startActivity(intent)
+        }*/
         if (!onBoardingCompleted) {
             val intent = Intent(this, OnBoardingActivity::class.java)
             startActivity(intent)
@@ -68,9 +83,18 @@ class MainActivity : AppCompatActivity() {
             NavigationUI.setupWithNavController(binding.navView, navController)
         }
     }
+
+    fun checkLang(lang: String?) {
+        val locale = Locale(lang)
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.locale = locale
+        this.resources.updateConfiguration(config, this.resources.displayMetrics)
+    }
     override fun onResume() {
         super.onResume()
-        getLastLocation()
+        if(checkPermissions())
+            getLastLocation()
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
@@ -135,12 +159,10 @@ class MainActivity : AppCompatActivity() {
             val mLastLocation: Location? = locationResult.lastLocation
             if (mLastLocation != null) {
                 lat=mLastLocation.latitude
-                //Toast.makeText(applicationContext, "lat:$lat", Toast.LENGTH_SHORT).show()
+               // Toast.makeText(applicationContext, "lat:$lat", Toast.LENGTH_SHORT).show()
                 sharedPreferences.edit().putString(Latitude, lat.toString()).apply()
-            }
-            if (mLastLocation != null) {
                 lon=mLastLocation.longitude
-               //Toast.makeText(applicationContext, "lon:$lon", Toast.LENGTH_SHORT).show()
+               // Toast.makeText(applicationContext, "lon:$lon", Toast.LENGTH_SHORT).show()
                 sharedPreferences.edit().putString(Longitude, lon.toString()).apply()
             }
         }

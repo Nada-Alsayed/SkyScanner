@@ -1,36 +1,39 @@
 <resources>
-    <string name="app_name">SkyScanner</string>
-    <string name="slogan">Stay one step a head</string>
-    <string name="get_started">Get Started</string>
-    <string name="home">Home</string>
-    <string name="favourites">Favourites</string>
-    <string name="alerts">Alerts</string>
-    <string name="settings">Settings</string>
+    <string name="app_name" translatable="false">SkyScanner</string>
+    <string name="slogan" translatable="false">Stay one step a head</string>
+    <string name="get_started" translatable="false">Get Started</string>
+    <string name="home" translatable="false">Home</string>
+    <string name="favourites" translatable="false">Favourites</string>
+    <string name="alerts" translatable="false">Alerts</string>
+    <string name="settings" translatable="false">Settings</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="temperature">Temperature</string>
-    <string name="language">Language</string>
-    <string name="lang_arabic">Arabic</string>
-    <string name="lang_english">English</string>
-    <string name="header_location">Location</string>
-    <string name="gps">GPS</string>
-    <string name="map">Map</string>
-    <string name="unit_kelvin">Kelvin</string>
-    <string name="unit_celsius">Celsius</string>
-    <string name="unit_fahrenheit">Fahrenheit</string>
-    <string name="header_notifications">Notifications</string>
-    <string name="enable">Enable</string>
-    <string name="disable">Disable</string>
-    <string name="with">with</string>
-    <string name="header_hourly_forecast">Hourly Forecast</string>
-    <string name="header_daily_forecast">Daily Forecast</string>
-    <string name="header_initial_setup">Initial SetUp</string>
-    <string name="done">Done</string>
-    <string name="ultra_violet">Ultra Violet</string>
-    <string name="visibility">Visibility</string>
-    <string name="cloud">Cloud</string>
-    <string name="humidity">Humidity</string>
-    <string name="pressure">Pressure</string>
-    <string name="wind">Wind</string>
-    <string name="title_activity_maps">MapsActivity</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="temperature" translatable="false">Temperature</string>
+    <string name="language" translatable="false">Language</string>
+    <string name="lang_arabic" translatable="false">Arabic</string>
+    <string name="lang_english" translatable="false">English</string>
+    <string name="header_location" translatable="false">Location</string>
+    <string name="gps" translatable="false">GPS</string>
+    <string name="map" translatable="false">Map</string>
+    <string name="unit_kelvin" translatable="false">Kelvin</string>
+    <string name="unit_celsius" translatable="false">Celsius</string>
+    <string name="unit_fahrenheit" translatable="false">Fahrenheit</string>
+    <string name="header_notifications" translatable="false">Notifications</string>
+    <string name="enable" translatable="false">Enable</string>
+    <string name="disable" translatable="false">Disable</string>
+    <string name="with" translatable="false">with</string>
+    <string name="header_hourly_forecast" translatable="false">Hourly Forecast</string>
+    <string name="header_daily_forecast" translatable="false">Daily Forecast</string>
+    <string name="header_initial_setup" translatable="false">Initial SetUp</string>
+    <string name="done" translatable="false">Done</string>
+    <string name="ultra_violet" translatable="false">Ultra Violet</string>
+    <string name="visibility" translatable="false">Visibility</string>
+    <string name="cloud" translatable="false">Cloud</string>
+    <string name="humidity" translatable="false">Humidity</string>
+    <string name="pressure" translatable="false">Pressure</string>
+    <string name="wind" translatable="false">Wind</string>
+    <string name="title_activity_maps" translatable="false">MapsActivity</string>
+    <string name="unit" translatable="false">Unit</string>
+    <string name="miles_hour" translatable="false">Miles/Hour</string>
+    <string name="meter_sec" translatable="false">Meter/Sec</string>
 </resources>

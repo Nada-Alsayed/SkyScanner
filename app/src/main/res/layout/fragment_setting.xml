@@ -70,7 +70,7 @@
                 android:paddingStart="10dp"
                 android:text="@string/lang_arabic"
                 android:textColor="@color/white"
-                android:textSize="19sp" />
+                android:textSize="18sp" />
 
             <RadioButton
                 android:id="@+id/rbEnglish"
@@ -79,7 +79,7 @@
                 android:paddingStart="10dp"
                 android:text="@string/lang_english"
                 android:textColor="@color/white"
-                android:textSize="19sp" />
+                android:textSize="18sp" />
         </RadioGroup>
 
 
@@ -124,7 +124,7 @@
                 android:paddingStart="10dp"
                 android:text="@string/gps"
                 android:textColor="@color/white"
-                android:textSize="19sp" />
+                android:textSize="18sp" />
 
             <RadioButton
                 android:id="@+id/rbMap"
@@ -133,7 +133,7 @@
                 android:paddingStart="10dp"
                 android:text="@string/map"
                 android:textColor="@color/white"
-                android:textSize="19sp" />
+                android:textSize="18sp"/>
         </RadioGroup>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -144,8 +144,8 @@
         android:layout_margin="12dp"
         android:background="@drawable/home_rounded_bg"
         android:padding="10dp"
-        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
-        app:layout_constraintTop_toBottomOf="@+id/conLocation">
+        app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
+        app:layout_constraintTop_toBottomOf="@+id/conNotification">
 
         <TextView
             android:id="@+id/textViewTemperature"
@@ -176,7 +176,7 @@
                 android:paddingStart="10dp"
                 android:text="@string/unit_kelvin"
                 android:textColor="@color/white"
-                android:textSize="19sp" />
+                android:textSize="18sp" />
 
             <RadioButton
                 android:id="@+id/rbCelsius"
@@ -185,7 +185,7 @@
                 android:paddingStart="10dp"
                 android:text="@string/unit_celsius"
                 android:textColor="@color/white"
-                android:textSize="19sp" />
+                android:textSize="18sp" />
 
             <RadioButton
                 android:id="@+id/rbFahrenheit"
@@ -194,7 +194,7 @@
                 android:paddingStart="10dp"
                 android:text="@string/unit_fahrenheit"
                 android:textColor="@color/white"
-                android:textSize="19sp" />
+                android:textSize="18sp" />
         </RadioGroup>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -236,7 +236,7 @@
                 android:paddingStart="10dp"
                 android:text="@string/enable"
                 android:textColor="@color/white"
-                android:textSize="19sp" />
+                android:textSize="18sp" />
 
             <RadioButton
                 android:id="@+id/rbDisable"
@@ -245,9 +245,62 @@
                 android:paddingStart="10dp"
                 android:text="@string/disable"
                 android:textColor="@color/white"
-                android:textSize="19sp" />
+                android:textSize="18sp" />
 
         </RadioGroup>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/conUnit"
+        android:layout_width="165dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:background="@drawable/home_rounded_bg"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        app:layout_constraintTop_toBottomOf="@+id/conLocation">
+
+        <TextView
+            android:id="@+id/textViewUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unit"
+            android:textColor="@color/nav_item_color"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/conUnit" />
+
+        <RadioGroup
+            android:id="@+id/rgMeasure"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="@+id/textViewUnit"
+            app:layout_constraintStart_toStartOf="@+id/textViewUnit"
+            app:layout_constraintTop_toBottomOf="@+id/textViewUnit">
+
+            <RadioButton
+                android:id="@+id/rbMeterSec"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:text="@string/meter_sec"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/rbMilesHour"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:text="@string/miles_hour"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+        </RadioGroup>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

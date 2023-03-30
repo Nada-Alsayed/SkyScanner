@@ -3,6 +3,7 @@ package eg.gov.iti.skyscanner.home.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import eg.gov.iti.skyscanner.models.RepositoryInterface
+import eg.gov.iti.skyscanner.models.WeatherDetail
 import eg.gov.iti.skyscanner.network.RequestState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +23,16 @@ class HomeViewModel(private val repo: RepositoryInterface) : ViewModel() {
                     e->stateShare.value=RequestState.Failure(e) }?.collect{
                     data->stateShare.value=RequestState.Success(data)
             }
+        }
+    }
+    fun deleteAll(){
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.deleteAll()
+        }
+    }
+    fun insertWeather(weatherDetail: WeatherDetail) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.insertWeather(weatherDetail)
         }
     }
     fun getRemoteWeatherKelvin(lat:Double,lon:Double,lang:String,apiKey:String)

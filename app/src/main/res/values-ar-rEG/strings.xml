@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SkyScanner</string>
+    <string name="slogan">خليك سابق بخطوة</string>
+    <string name="get_started">ابدا</string>
+    <string name="home">الرئيسية</string>
+    <string name="favourites">المفضلة</string>
+    <string name="alerts">التنبيهات</string>
+    <string name="settings">الاعدادات</string>
+    <string name="hello_blank_fragment">اهلا</string>
+    <string name="temperature">درجة الحرارة</string>
+    <string name="language">اللغة</string>
+    <string name="lang_arabic">العربية</string>
+    <string name="lang_english">الانجليزية</string>
+    <string name="header_location">الموقع</string>
+    <string name="gps">الموقع الجغرافي</string>
+    <string name="map">الخريطة</string>
+    <string name="unit_kelvin">كيلفن</string>
+    <string name="unit_celsius">سيلزيوس</string>
+    <string name="unit_fahrenheit">فهرنهايت</string>
+    <string name="header_notifications">الاشعارات</string>
+    <string name="enable">تفعيل</string>
+    <string name="disable">الغاء التفعيل</string>
+    <string name="with">مع</string>
+    <string name="header_hourly_forecast">الطقس لكل ساعة</string>
+    <string name="header_daily_forecast">الطقس خلال ايام الاسبوع</string>
+    <string name="header_initial_setup">الاعدادات الاولية</string>
+    <string name="done">تم</string>
+    <string name="ultra_violet">الاشعة البنفسجية</string>
+    <string name="visibility">الرؤية</string>
+    <string name="cloud">السحب</string>
+    <string name="humidity">الرطوبة</string>
+    <string name="pressure">الضغط</string>
+    <string name="wind">الرياح</string>
+    <string name="title_activity_maps">ماب</string>
+    <string name="unit">وحدات القياس</string>
+    <string name="miles_hour">ميل/ساعة</string>
+    <string name="meter_sec">متر/ثانية</string>
+</resources>
