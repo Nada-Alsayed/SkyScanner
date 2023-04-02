@@ -18,19 +18,22 @@
         android:id="@+id/conDaily"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="9dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:background="@drawable/home_rounded_bg"
-        android:padding="10dp"
+        android:padding="3dp"
         app:layout_constraintEnd_toEndOf="@id/guidelineRight"
         app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineTop">
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/RVDaily"
+            android:id="@+id/RVFav"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             tools:itemCount="10"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:layout_editor_absoluteX="10dp"
             tools:layout_editor_absoluteY="-156dp"
             tools:listitem="@layout/rv_row_fav_country"

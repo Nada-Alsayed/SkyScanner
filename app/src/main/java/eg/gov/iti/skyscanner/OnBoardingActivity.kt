@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import eg.gov.iti.skyscanner.databinding.ActivityOnboardingBinding
 import eg.gov.iti.skyscanner.mainactivity.view.MainActivity
 import eg.gov.iti.skyscanner.map.MapsActivity
+import eg.gov.iti.skyscanner.settings.view.Location
 
 const val OnBoardingPref="onBoarding_completed"
 class OnBoardingActivity : AppCompatActivity() {
@@ -17,20 +18,21 @@ class OnBoardingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityOnboardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         binding.btnSetUpDone.setOnClickListener {
             if (binding.rbgps.isChecked) {
-                val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
                 sharedPreferences.edit().putBoolean(OnBoardingPref, true).apply()
+                sharedPreferences.edit().putString(Location,"gps").apply()
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
                 Toast.makeText(applicationContext, "gps", Toast.LENGTH_SHORT).show()
             } else if (binding.rbMap.isChecked) {
-                /*val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
                 sharedPreferences.edit().putBoolean(OnBoardingPref, true).apply()
+                sharedPreferences.edit().putString(Location,"map").apply()
                 val intent = Intent(this, MapsActivity::class.java)
                 startActivity(intent)
-                finish()*/
+                finish()
                 Toast.makeText(applicationContext, "map", Toast.LENGTH_SHORT).show()
             }
         }

@@ -35,5 +35,9 @@
     <string name="title_activity_maps" translatable="false">MapsActivity</string>
     <string name="unit" translatable="false">Unit</string>
     <string name="miles_hour" translatable="false">Miles/Hour</string>
+    <string name="confirm_yes" translatable="false">Yes</string>
     <string name="meter_sec" translatable="false">Meter/Sec</string>
+    <string name="are_you_sure" translatable="false">Are you sure you want to delete this location from your favourite list ?</string>
+    <string name="delete_alert_title" translatable="false">Delete Alert</string>
+    <string name="location_alert_title" translatable="false">Map Alert</string>
 </resources>

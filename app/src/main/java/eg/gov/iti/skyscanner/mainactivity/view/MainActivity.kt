@@ -19,26 +19,28 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
-import eg.gov.iti.skyscanner.R
 import com.google.android.gms.location.*
 import eg.gov.iti.skyscanner.LanguageManager
 import eg.gov.iti.skyscanner.OnBoardingActivity
 import eg.gov.iti.skyscanner.OnBoardingPref
+import eg.gov.iti.skyscanner.R
 import eg.gov.iti.skyscanner.databinding.ActivityMainBinding
 import eg.gov.iti.skyscanner.home.view.Latitude
 import eg.gov.iti.skyscanner.home.view.Longitude
 import eg.gov.iti.skyscanner.settings.view.Language
+import eg.gov.iti.skyscanner.settings.view.Location
 import java.util.*
 
 const val Permission_1 = 10
+
 class MainActivity : AppCompatActivity() {
-    var lat:Double=0.0
-    var lon:Double=0.0
+    var lat: Double = 0.0
+    var lon: Double = 0.0
     lateinit var binding: ActivityMainBinding
     lateinit var toolbar: Toolbar
     lateinit var toggle: ActionBarDrawerToggle
     lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
-    lateinit var sharedPreferences :SharedPreferences
+    lateinit var sharedPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -46,26 +48,22 @@ class MainActivity : AppCompatActivity() {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        val language=sharedPreferences.getString(Language,"ar")
-        checkLang(language)
         val onBoardingCompleted = sharedPreferences.getBoolean(OnBoardingPref, false)
-       /* if (language.equals("ar"))
-        {
+        var lang = sharedPreferences.getString(Language, "en")
+        Toast.makeText(this,lang,Toast.LENGTH_SHORT).show()
+        if (lang.equals("ar")){
             LanguageManager.setLanguage(this,"ar")
-            finish()
-            startActivity(intent)
-        }
-        else{
+        }else{
             LanguageManager.setLanguage(this,"en")
-            finish()
-            startActivity(intent)
-        }*/
+        }
         if (!onBoardingCompleted) {
             val intent = Intent(this, OnBoardingActivity::class.java)
             startActivity(intent)
             finish()
         } else {
-            getLastLocation()
+            if (sharedPreferences.getString(Location, "gps").equals("gps")) {
+                getLastLocation()
+            }
             toolbar = findViewById(R.id.toolBar)
             setSupportActionBar(toolbar)
             toggle = ActionBarDrawerToggle(
@@ -83,19 +81,15 @@ class MainActivity : AppCompatActivity() {
             NavigationUI.setupWithNavController(binding.navView, navController)
         }
     }
-
-    fun checkLang(lang: String?) {
-        val locale = Locale(lang)
-        Locale.setDefault(locale)
-        val config = Configuration()
-        config.locale = locale
-        this.resources.updateConfiguration(config, this.resources.displayMetrics)
-    }
     override fun onResume() {
         super.onResume()
-        if(checkPermissions())
-            getLastLocation()
+        if (sharedPreferences.getString(Location, "gps").equals("gps")) {
+            if (checkPermissions())
+                getLastLocation()
+        }
+
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             if (binding.navDrawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -158,11 +152,11 @@ class MainActivity : AppCompatActivity() {
         override fun onLocationResult(locationResult: LocationResult) {
             val mLastLocation: Location? = locationResult.lastLocation
             if (mLastLocation != null) {
-                lat=mLastLocation.latitude
-               // Toast.makeText(applicationContext, "lat:$lat", Toast.LENGTH_SHORT).show()
+                lat = mLastLocation.latitude
+                // Toast.makeText(applicationContext, "lat:$lat", Toast.LENGTH_SHORT).show()
                 sharedPreferences.edit().putString(Latitude, lat.toString()).apply()
-                lon=mLastLocation.longitude
-               // Toast.makeText(applicationContext, "lon:$lon", Toast.LENGTH_SHORT).show()
+                lon = mLastLocation.longitude
+                // Toast.makeText(applicationContext, "lon:$lon", Toast.LENGTH_SHORT).show()
                 sharedPreferences.edit().putString(Longitude, lon.toString()).apply()
             }
         }

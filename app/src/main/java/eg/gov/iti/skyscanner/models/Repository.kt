@@ -20,21 +20,31 @@ class Repository private constructor(
             }
         }
     }
-    override suspend fun getStoredWeather(): List<WeatherDetail>? {
+    override  fun getStoredWeather(): Flow<List<WeatherDetail>? >{
         return localSource.allStoredWeather()
     }
+
+    override  fun getStoredFavWeather(): Flow<List<FavModel>?>{
+        return  localSource.allStoredWeatherFav()
+    }
+
     /*override suspend fun getStoredWeather(): Flow<WeatherDetail>? {
         return flowOf( localSource.allStoredWeather())
     }*/
     override suspend fun deleteAll() {
         return localSource.deleteAllWeather()
     }
-    override suspend fun deleteWeather(weatherDetail: WeatherDetail) {
+    override suspend fun deleteWeather(weatherDetail: FavModel) {
         return localSource.deleteWeather(weatherDetail)
     }
     override suspend fun insertWeather(weatherDetail: WeatherDetail) {
         return localSource.insertWeather(weatherDetail)
     }
+
+    override suspend fun insertFavWeather(fav: FavModel) {
+       return localSource.insertWeatherFav(fav)
+    }
+
     override suspend fun getRetrofitWeather(
         lat: Double,
         lon: Double,

@@ -3,28 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="10dp"
     android:padding="3dp"
+    android:layout_marginTop="12dp"
+    android:layout_marginBottom="12dp"
+    android:id="@+id/conFav"
     android:background="@drawable/rounded_button">
 
     <TextView
-        android:id="@+id/txtDayName"
+        android:id="@+id/txtCountryName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
+        android:layout_marginStart="5dp"
         android:padding="10dp"
         android:text="Egypt"
         android:textColor="@color/white"
-        android:textSize="24dp"
+        android:textSize="19dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
 
 <ImageView
-    android:layout_width="70dp"
-    android:layout_height="50dp"
-    android:layout_marginEnd="13dp"
+    android:id="@+id/iconDel"
+    android:layout_width="40dp"
+    android:layout_height="45dp"
+    android:layout_marginEnd="3dp"
     android:padding="5dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"

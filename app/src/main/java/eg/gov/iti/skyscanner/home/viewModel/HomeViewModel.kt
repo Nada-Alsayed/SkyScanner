@@ -13,10 +13,10 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repo: RepositoryInterface) : ViewModel() {
-    private var _allWeatherFromRoom: MutableStateFlow<List<WeatherDetail>?> = MutableStateFlow(null)
-    val allWeatherFromRoom: StateFlow<List<WeatherDetail>?> = _allWeatherFromRoom
+    private var _allWeatherFromRoom: MutableStateFlow<RequestState<List<WeatherDetail>?>> = MutableStateFlow(RequestState.Loading)
+    val allWeatherFromRoom = _allWeatherFromRoom
 
-    private var stateShare = MutableStateFlow<RequestState>(RequestState.Loading)
+    private var stateShare = MutableStateFlow<RequestState<WeatherDetail>>(RequestState.Loading)
     var weather =stateShare
 
     fun getRemoteWeather(lat:Double,lon:Double,units:String,lang:String,apiKey:String)
@@ -31,16 +31,11 @@ class HomeViewModel(private val repo: RepositoryInterface) : ViewModel() {
     }
     fun getStoredWeather(){
         viewModelScope.launch (Dispatchers.IO){
-
-            try {
-                var listWeatherDB: List<WeatherDetail>? = repo.getStoredWeather()
-                _allWeatherFromRoom.value= listWeatherDB
-
-            } catch (e: Exception) {
-                Log.e("WeatherDBViewModel", e.message.toString())
-
+            repo.getStoredWeather().catch {
+                e->_allWeatherFromRoom.value=RequestState.Failure(e)
+            }.collect{
+                it->_allWeatherFromRoom.value=RequestState.Success(it)
             }
-
         }
     }
 

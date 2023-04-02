@@ -9,7 +9,6 @@ import com.google.gson.reflect.TypeToken
 
 
 @Entity(tableName="weather",primaryKeys = ["lat", "lon","isFav"])
-
 @TypeConverters(WeatherTypeConverter::class)
 data class WeatherDetail (
     val alerts: List<Alert>?,

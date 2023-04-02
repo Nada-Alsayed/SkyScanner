@@ -9,16 +9,19 @@ import androidx.recyclerview.widget.RecyclerView
 import eg.gov.iti.skyscanner.databinding.RvRowDailyTempBinding
 import eg.gov.iti.skyscanner.models.MyIcons
 import eg.gov.iti.skyscanner.models.WeatherDetail
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 class AdapterDailyRV(
     var weather: WeatherDetail,
     val context: Context,
-    val unit:String
+    val unit:String,
+    val lang:String
 ) : RecyclerView.Adapter<AdapterDailyRV.ViewHolder>() {
     var icon: MyIcons=MyIcons()
     private lateinit var binding: RvRowDailyTempBinding
+    val formatter = NumberFormat.getInstance(Locale(lang))
 
     inner class ViewHolder(var binding: RvRowDailyTempBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -43,17 +46,23 @@ class AdapterDailyRV(
         if (weather != null) {
             var myDay: WeatherDetail.Daily = weather.daily[position]
             icon.replaceAPIIcon(myDay.weather.get(0).icon, holder.binding.rvImgWDay)
-            holder.binding.txtDayName.text = getDay(myDay.dt)
+            holder.binding.txtDayName.text = getDay(myDay.dt,lang)
             holder.binding.rvTxtTemp.text = myDay.weather.get(0).description
             when (unit) {
                 "metric" -> {
-                    holder.binding.rvNumTemp.text = "${myDay.temp.min.toInt()}/${myDay.temp.max.toInt()}°C"
+                    val formattedNumber1 = formatter.format(myDay.temp.min.toInt())
+                    val formattedNumber2 = formatter.format(myDay.temp.max.toInt())
+                    holder.binding.rvNumTemp.text = "${formattedNumber1}/${formattedNumber2}°C"
                 }
                 "imperial" -> {
-                    holder.binding.rvNumTemp.text = "${myDay.temp.min.toInt()}/${myDay.temp.max.toInt()}°F"
+                    val formattedNumber1 = formatter.format(myDay.temp.min.toInt())
+                    val formattedNumber2 = formatter.format(myDay.temp.max.toInt())
+                    holder.binding.rvNumTemp.text = "${formattedNumber1}/${formattedNumber2}°F"
                 }
                 else -> {
-                    holder.binding.rvNumTemp.text = "${myDay.temp.min.toInt()}/${myDay.temp.max.toInt()}°K"
+                    val formattedNumber1 = formatter.format(myDay.temp.min.toInt())
+                    val formattedNumber2 = formatter.format(myDay.temp.max.toInt())
+                    holder.binding.rvNumTemp.text = "${formattedNumber1}/${formattedNumber2}°K"
                 }
             }
 
@@ -61,8 +70,8 @@ class AdapterDailyRV(
         }
     }
 
-    fun getDay(dt: Int): String {
-        val cityTxtFormat = SimpleDateFormat("E")
+    fun getDay(dt: Int,lang:String): String {
+        val cityTxtFormat = SimpleDateFormat("E",Locale(lang))
         val cityTxtData = Date(dt.toLong() * 1000)
         return cityTxtFormat.format(cityTxtData)
     }

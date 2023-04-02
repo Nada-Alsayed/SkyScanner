@@ -20,10 +20,12 @@ const val TempUnit = "unit"
 const val Notification = "notification"
 const val Location = "location"
 const val MeasureUnit="measure"
+const val ActivityFlag="flag"
 
 class FragmentSetting : Fragment() {
     lateinit var binding: FragmentSettingBinding
     lateinit var sharedPreference: SharedPreferences
+    //var languageFlag=true
     lateinit var editor: SharedPreferences.Editor
     override fun onResume() {
         super.onResume()
@@ -33,16 +35,12 @@ class FragmentSetting : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedPreference = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         editor = sharedPreference.edit()
        // Falerinheit =Imperial: miles/hour
-        var lang = sharedPreference.getString(Language, "en")
+        var lang = sharedPreference.getString(Language, "n")
         var temp = sharedPreference.getString(TempUnit, "metric")
         var notif = sharedPreference.getString(Notification, "enable")
         var loca = sharedPreference.getString(Location, "gps")
@@ -80,6 +78,7 @@ class FragmentSetting : Fragment() {
         when (loca) {
             "gps" -> {
                 binding.rgLocation.check(R.id.rbGPS)
+
             }
             "map" -> {
                 binding.rgLocation.check(R.id.rbMap)
@@ -100,17 +99,13 @@ class FragmentSetting : Fragment() {
                 when (optionId) {
                     R.id.rbArabic -> {
                         editor.putString(Language, "ar").apply()
-                        activity?.recreate()
-                        activity?.recreate()
-                        activity?.recreate()
-                        //changeLanguage("ar")
+                        LanguageManager.setLanguage(requireContext(),"ar")
+                        activity?.recreate();
                     }
                     R.id.rbEnglish -> {
                         editor.putString(Language, "en").apply()
-                        activity?.recreate()
-                        activity?.recreate()
-                        activity?.recreate()
-                       // changeLanguage("en")
+                        LanguageManager.setLanguage(requireContext(),"en")
+                        activity?.recreate();
                     }
                 }
             }
@@ -140,6 +135,7 @@ class FragmentSetting : Fragment() {
                     }
                     R.id.rbMap -> {
                         editor.putString(Location, "map").apply()
+                        editor.putString(ActivityFlag,"fragSettings").apply()
                         val intent = Intent(requireContext(), MapsActivity::class.java)
                         startActivity(intent)
                         activity?.finish()
