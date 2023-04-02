@@ -2,6 +2,7 @@ package eg.gov.iti.skyscanner.DataBase
 
 import androidx.room.*
 import eg.gov.iti.skyscanner.models.FavModel
+import eg.gov.iti.skyscanner.models.UserAlerts
 import eg.gov.iti.skyscanner.models.WeatherDetail
 import kotlinx.coroutines.flow.Flow
 
@@ -19,6 +20,14 @@ interface DAO {
     suspend fun deleteWeather(fav: FavModel)
     @Query("Select * FROM weather")
      fun getStoredWeather():Flow<List<WeatherDetail>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertUserAlert(userAlert: UserAlerts)
+    @Query("Select * FROM UserAlerts")
+    fun getStoredUserAlert():Flow<List<UserAlerts>>
+
+    @Delete
+    suspend fun deleteUserAlert(userAlert: UserAlerts)
    /*
    @Delete
     suspend fun deleteWeather(weatherDetail: WeatherDetail)

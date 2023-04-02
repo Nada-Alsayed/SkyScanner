@@ -28,6 +28,10 @@ class Repository private constructor(
         return  localSource.allStoredWeatherFav()
     }
 
+    override fun getStoredAlerts(): Flow<List<UserAlerts>?> {
+        return localSource.allStoredUserAlerts()
+    }
+
     /*override suspend fun getStoredWeather(): Flow<WeatherDetail>? {
         return flowOf( localSource.allStoredWeather())
     }*/
@@ -37,12 +41,21 @@ class Repository private constructor(
     override suspend fun deleteWeather(weatherDetail: FavModel) {
         return localSource.deleteWeather(weatherDetail)
     }
+
+    override suspend fun deleteAlert(alert: UserAlerts) {
+        return localSource.deleteUserAlert(alert)
+    }
+
     override suspend fun insertWeather(weatherDetail: WeatherDetail) {
         return localSource.insertWeather(weatherDetail)
     }
 
     override suspend fun insertFavWeather(fav: FavModel) {
        return localSource.insertWeatherFav(fav)
+    }
+
+    override suspend fun insertAlert(alert: UserAlerts) {
+        return localSource.insertUserAlerts(alert)
     }
 
     override suspend fun getRetrofitWeather(
