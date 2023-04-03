@@ -40,7 +40,16 @@
     <string name="are_you_sure" translatable="false">Are you sure you want to delete this location from your favourite list ?</string>
     <string name="delete_alert_title" translatable="false">Delete Alert</string>
     <string name="location_alert_title" translatable="false">Map Alert</string>
-    <string name="from">From</string>
-    <string name="to">T0</string>
-    <string name="save">Save</string>
+    <string name="from" translatable="false">From</string>
+    <string name="to" translatable="false">T0</string>
+    <string name="save" translatable="false">Save</string>
+    <string name="draw_overlays" translatable="false">Please, Enable Draw Overlays permission.</string>
+    <string name="draw_overlays_description" translatable="false">You will not receive notifications while the app is in the background if you disable these permissions.\n\nEnable…\n1) Display pop-up windows while running in the background \n2) Display pop-up window</string>
+    <string name="go_to_settings" translatable="false">Go to Settings</string>
+
+    <string name="error_msg_permission_required">Permission required!\nPlease, give the permission to work correctly!</string>
+    <string name="empty_alarm_from">You must select (From) date and time!</string>
+    <string name="empty_alarm_to">You must select (To) date and time!</string>
+    <string name="warning">Warning</string>
+    <string name="ok">OK</string>
 </resources>

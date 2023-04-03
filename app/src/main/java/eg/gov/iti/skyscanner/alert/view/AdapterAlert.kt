@@ -9,17 +9,18 @@ import androidx.recyclerview.widget.RecyclerView
 import eg.gov.iti.skyscanner.databinding.RvRowAlertBinding
 import eg.gov.iti.skyscanner.models.UserAlerts
 import eg.gov.iti.skyscanner.network.RetrofitHelper
-class AdapterAlert (private val context: Context,
-                    private val onButtonClickListener:OnClickAlertInterface,
-                    private var userAlerts:List<UserAlerts>,
-                    private val lang:String): RecyclerView.Adapter<AdapterAlert.ViewHolder>()
+class AdapterAlert(private val context: Context,
+                   private val onButtonClickListener:OnClickAlertInterface,
+                   private var userAlerts:List<UserAlerts>,
+                   private val lang: String
+): RecyclerView.Adapter<AdapterAlert.ViewHolder>()
 {
 
     private lateinit var binding: RvRowAlertBinding
     inner class ViewHolder(var binding: RvRowAlertBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    fun setFavList(list: List<UserAlerts>) {
+    fun setAlertList(list: List<UserAlerts>) {
         userAlerts= list
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
