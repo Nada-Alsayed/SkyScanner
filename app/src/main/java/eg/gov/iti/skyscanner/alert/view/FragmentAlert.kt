@@ -1,6 +1,9 @@
 package eg.gov.iti.skyscanner.alert.view
 
-import android.app.*
+import android.app.Activity
+import android.app.DatePickerDialog
+import android.app.Dialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -29,11 +32,14 @@ import eg.gov.iti.skyscanner.databinding.DialogAlertBinding
 import eg.gov.iti.skyscanner.databinding.FragmentAlertBinding
 import eg.gov.iti.skyscanner.models.Repository
 import eg.gov.iti.skyscanner.models.UserAlerts
+import eg.gov.iti.skyscanner.models.WeatherDetail
 import eg.gov.iti.skyscanner.network.APIClient
 import eg.gov.iti.skyscanner.network.RequestState
 import eg.gov.iti.skyscanner.settings.view.Language
-import kotlinx.coroutines.flow.collect
+import eg.gov.iti.skyscanner.workmanager.WorkRequestManager.createWorkRequest
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -77,7 +83,7 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
     }
 
     private fun init() {
-
+//userAlerts= UserAlerts(0,1,1,"")
         viewModelFactory = AlertViewModelFactory(
             Repository.getInstance(
                 APIClient.getInstance(), ConcreteLocalSource(requireContext())
@@ -108,57 +114,25 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
                 }
             }
         }
-viewModel.getStoredWeather()
-        lifecycleScope.launch() {
-            viewModel.allWeatherFromRoom.collect{db->
-                when (db) {
-                    is RequestState.Success -> {
 
-                    }
-                    else -> {}
-                }
-        }}
-        
-        /*viewModel.getUserAlerts().observe(viewLifecycleOwner, {
-            updateAdapter(it)
-        })
-        alertsViewModel.id.observe(viewLifecycleOwner, { alert ->
-            userAlerts.id = alert
-
-            alertsViewModel.getLocalWeatherModele().observe(viewLifecycleOwner,{
-                weatherModel = it[0]
-                if (weatherModel.alerts.isNullOrEmpty()){
-                    setOneTimeWorkRequest(userAlerts, getString(R.string.NoAlerts), weatherModel.current.weather[0].icon)
-                }else{
-                    setOneTimeWorkRequest(userAlerts, weatherModel.alerts!![0].tags[0],weatherModel.current.weather[0].icon)
-                }
-            })
-        })
-*/
 
     }
 
-    //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            val intent = Intent()
-//            val packageName: String = myView.context.packageName
-//            val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
-//            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-//                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-//                intent.data = Uri.parse("package:$packageName")
-//                startActivity(intent)
-//            }
-//        }
+    private fun setOneTimeWorkRequest(alert: UserAlerts, description: String, icon: String) {
+        Log.e("TAG", "notify: *************8888 " + description + icon)
 
+        createWorkRequest(alert, description, icon, myView.context, alert.startLongDate)
+    }
 
-    fun askForDrawOverlaysPermission(activity: Activity, requestCode: Int) {
+    /*fun askForDrawOverlaysPermission(activity: Activity, requestCode: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(activity)) {
             val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + activity.packageName))
             activity.startActivityForResult(intent, requestCode)
         }
-    }
-   /* private fun askForDrawOverlaysPermission() {
+    }*/
+    private fun askForDrawOverlaysPermission() {
         if (!Settings.canDrawOverlays(requireView().context)) {
-            if ("samsung" == Build.MANUFACTURER.lowercase(Locale.ROOT)) {
+            if ("xiaomi" == Build.MANUFACTURER.lowercase(Locale.ROOT)) {
                 val intent = Intent("miui.intent.action.APP_PERM_EDITOR")
                 intent.setClassName(
                     "com.miui.securitycenter",
@@ -169,9 +143,7 @@ viewModel.getStoredWeather()
                     .setTitle(R.string.draw_overlays)
                     .setMessage(R.string.draw_overlays_description)
                     .setPositiveButton(R.string.go_to_settings) { dialog, which ->
-                        startActivity(
-                            intent
-                        )
+                        startActivity(intent)
                     }
                     .setIcon(R.drawable.baseline_warning_amber_24)
                     .show()
@@ -191,34 +163,35 @@ viewModel.getStoredWeather()
             }
         }
 
-    }*/
+    }
 
     private val runtimePermissionResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
 
     private fun addListeners() {
         binding.fabAlert.setOnClickListener {
-            /*val pm = requireView().context.getSystemService(Context.POWER_SERVICE) as PowerManager
+            val pm = requireView().context.getSystemService(Context.POWER_SERVICE) as PowerManager
             if (!Settings.canDrawOverlays(requireView().context)) {
-                askForDrawOverlaysPermission(requireActivity(),1)
+                askForDrawOverlaysPermission()
             } else if (!pm.isIgnoringBatteryOptimizations(myView.context.packageName)) {
                 Log.e("TAG", "addListeners: *******")
                 val intent = Intent()
                 intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
                 intent.data = Uri.parse("package:" + requireView().context.packageName)
                 startActivity(intent)
-            } else {*/
+            } else {
                 dialog.show()
-            //}
+            }
 
         }
+        viewModel.getStoredWeather()
+
         alertActBinding.startDateId.setOnClickListener {
             showDateTimePicker(AlertConst.START_EDIT_TEXT)
         }
         //endDateid = dialog.findViewById(R.id.endDateid)
         alertActBinding.endDateid.setOnClickListener {
             showDateTimePicker(AlertConst.END_EDIT_TEXT)
-
         }
         /*alertOptions.setOnCheckedChangeListener{_,checkedId->
             val radioButton: RadioButton = dialog.findViewById(checkedId)
@@ -242,7 +215,6 @@ viewModel.getStoredWeather()
                 Log.e("TAG", "endDate :$endLongDate")
                 Log.e("TAG", "option :$option")
 */
-
                 alertActBinding.startDateId.setText("")
                 alertActBinding.endDateid.setText("")
                 dialog.cancel()
@@ -251,8 +223,51 @@ viewModel.getStoredWeather()
     }
 
     private fun storeInRoom() {
-        userAlerts = UserAlerts(startLongDate = startLongDate, endLongDate = endLongDate)
-        viewModel.insertAlert(userAlerts)
+        runBlocking {
+            lifecycleScope.launch() {
+                userAlerts = UserAlerts(startLongDate = startLongDate,endLongDate = endLongDate, alertOption = "null")
+                viewModel.insertAlert(userAlerts)
+            }.join()
+
+            viewModel.getStoredWeather()
+            lifecycleScope.launch() {
+                viewModel.allWeatherFromRoom.collectLatest { alert ->
+                    when (alert) {
+                        is RequestState.Success -> {
+                            val weather = alert.data?.get(0)?.let {
+                                WeatherDetail(
+                                    it.alerts,
+                                    it.current,
+                                    it.daily,
+                                    it.hourly,
+                                    it.lat,
+                                    it.lon,
+                                    it.timezone,
+                                    it.timezone_offset,
+                                    it.isFav
+                                )
+                            }
+                            if (weather != null) {
+                                if (weather.alerts.isNullOrEmpty()) {
+                                    setOneTimeWorkRequest(
+                                        userAlerts,
+                                        getString(R.string.NoAlerts),
+                                        weather.current.weather[0].icon
+                                    )
+                                } else {
+                                    setOneTimeWorkRequest(
+                                        userAlerts,
+                                        weather.alerts!![0].tags[0],
+                                        weather.current.weather[0].icon
+                                    )
+                                }
+                            }
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
     }
 
     fun showDateTimePicker(label: String) {
@@ -286,22 +301,21 @@ viewModel.getStoredWeather()
     private fun updateLabel(calendar: Calendar, editText: EditText): Long {
         val myFormat = "HH:mm a\ndd/MM/yyyy"
         val dateFormat =
-            SimpleDateFormat(myFormat, Locale(sharedPreference.getString(Language, "m")))
+            SimpleDateFormat(myFormat, Locale(sharedPreference.getString(Language, "en")))
         val milliseconds: Long = calendar.timeInMillis
-
         editText.setText(dateFormat.format(calendar.time))
         return milliseconds
     }
 
     override fun deleteOnClick(userAlert: UserAlerts) {
-        val builder: AlertDialog.Builder =  AlertDialog.Builder(requireContext())
+        val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
         builder.setCancelable(true)
         builder.setTitle(getString(R.string.delete_alert_title))
         builder.setMessage(getString(R.string.are_you_sure))
         builder.setPositiveButton(getString(R.string.confirm_yes)) { _, _ ->
             viewModel.deleteAlert(userAlert)
         }
-        builder.setNegativeButton(android.R.string.cancel){ _, _ -> }
+        builder.setNegativeButton(android.R.string.cancel) { _, _ -> }
 
         //  val dialog: AlertDialog = builder.create()
         //  dialog.setCanceledOnTouchOutside(false)

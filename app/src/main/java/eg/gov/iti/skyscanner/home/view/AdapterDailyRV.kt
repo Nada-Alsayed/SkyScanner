@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import eg.gov.iti.skyscanner.databinding.RvRowDailyTempBinding
 import eg.gov.iti.skyscanner.models.MyIcons
+import eg.gov.iti.skyscanner.models.MyIcons.replaceAPIIcon
 import eg.gov.iti.skyscanner.models.WeatherDetail
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -19,7 +20,6 @@ class AdapterDailyRV(
     val unit:String,
     val lang:String
 ) : RecyclerView.Adapter<AdapterDailyRV.ViewHolder>() {
-    var icon: MyIcons=MyIcons()
     private lateinit var binding: RvRowDailyTempBinding
     val formatter = NumberFormat.getInstance(Locale(lang))
 
@@ -45,7 +45,7 @@ class AdapterDailyRV(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (weather != null) {
             var myDay: WeatherDetail.Daily = weather.daily[position]
-            icon.replaceAPIIcon(myDay.weather.get(0).icon, holder.binding.rvImgWDay)
+            replaceAPIIcon(myDay.weather.get(0).icon, holder.binding.rvImgWDay)
             holder.binding.txtDayName.text = getDay(myDay.dt,lang)
             holder.binding.rvTxtTemp.text = myDay.weather.get(0).description
             when (unit) {

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import eg.gov.iti.skyscanner.databinding.RvRowHourlyTempBinding
 import eg.gov.iti.skyscanner.models.MyIcons
+import eg.gov.iti.skyscanner.models.MyIcons.replaceAPIIcon
 import eg.gov.iti.skyscanner.models.WeatherDetail
 import java.text.NumberFormat
 import java.time.Instant
@@ -21,7 +22,7 @@ class AdapterHourlyRV(
     val unit:String,val lang:String
 ) : RecyclerView.Adapter<AdapterHourlyRV.ViewHolder>() {
     private lateinit var binding: RvRowHourlyTempBinding
-     var icon: MyIcons=MyIcons()
+
     val formatter = NumberFormat.getInstance(Locale(lang))
 
     inner class ViewHolder(var binding: RvRowHourlyTempBinding) :
@@ -47,7 +48,7 @@ class AdapterHourlyRV(
         if (weather != null) {
 
             var myHour: WeatherDetail.Hourly = weather.hourly[position]
-            icon.replaceAPIIcon(myHour.weather.get(0).icon, holder.binding.rvImgW)
+            replaceAPIIcon(myHour.weather.get(0).icon, holder.binding.rvImgW)
             holder.binding.txtHour.text = getCurrentTime(myHour.dt, weather.timezone)
             holder.binding.rvTxtTemp.text = myHour.temp.toInt().toString()
             when (unit) {

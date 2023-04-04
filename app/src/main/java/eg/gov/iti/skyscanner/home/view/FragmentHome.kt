@@ -19,6 +19,7 @@ import eg.gov.iti.skyscanner.databinding.FragmentHomeBinding
 import eg.gov.iti.skyscanner.home.viewModel.HomeViewModel
 import eg.gov.iti.skyscanner.home.viewModel.HomeViewModelFactory
 import eg.gov.iti.skyscanner.models.MyIcons
+import eg.gov.iti.skyscanner.models.MyIcons.replaceAPIIcon
 import eg.gov.iti.skyscanner.models.Repository
 import eg.gov.iti.skyscanner.models.WeatherDetail
 import eg.gov.iti.skyscanner.network.APIClient
@@ -46,7 +47,6 @@ class FragmentHome : Fragment() {
     lateinit var viewModelFactory: HomeViewModelFactory
     lateinit var sharedPreference: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
-    var icon: MyIcons = MyIcons()
     var lang: String = ""
 
     override fun onResume() {
@@ -234,7 +234,7 @@ class FragmentHome : Fragment() {
         val addresses: MutableList<Address> = geocoder.getFromLocation(
             weatherDetail.lat, weatherDetail.lon, 1
         ) as MutableList<Address>
-        icon.replaceAPIIcon(weatherDetail.current.weather[0].icon, binding.imgW)
+        replaceAPIIcon(weatherDetail.current.weather[0].icon, binding.imgW)
         binding.txtTempState.text = weatherDetail.current.weather[0].description
         binding.txtDate.text = date(lang)
         binding.txtPressure.text = "${weatherDetail.current.pressure} hpa"
