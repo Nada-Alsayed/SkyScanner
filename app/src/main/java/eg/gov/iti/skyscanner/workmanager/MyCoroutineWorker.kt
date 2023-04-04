@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import androidx.work.impl.background.systemalarm.SystemAlarmDispatcher
 import eg.gov.iti.skyscanner.DataBase.ConcreteLocalSource
 import eg.gov.iti.skyscanner.DialogActivity
 import eg.gov.iti.skyscanner.R
@@ -44,7 +45,7 @@ class MyCoroutineWorker (private val context: Context, parameters: WorkerParamet
         val notification = sharedPreference.getString(Notification, "enable")
        // Toast.makeText(context,""+notification,Toast.LENGTH_SHORT).show()
         Log.e("TAG", "doWork: *************+++++++"+notification )
-        CoroutineScope(Dispatchers.IO).launch {
+       // CoroutineScope(Dispatchers.IO).launch {
             Log.e("TAG", "doWork: *************" )
             val myAlert = convertToUserAlert(inputData.getString(ALERT)!!)
             val description = inputData.getString(DESCRIPTION)
@@ -61,7 +62,7 @@ class MyCoroutineWorker (private val context: Context, parameters: WorkerParamet
                     Log.e("TAG", "doWork: *************333" )
                }
 
-                if (myAlert.alertOption == "null") {
+                if (myAlert.alertOption == "") {
                     if (Settings.canDrawOverlays(context)) {
                         Log.e("TAG", "doWork: *************4444" )
                         withContext(Dispatchers.Main) {
@@ -82,19 +83,20 @@ class MyCoroutineWorker (private val context: Context, parameters: WorkerParamet
                     context,
                     (fromTimeInMillis + 86400000)
                 )
-            } else {
+            }
+            else {
                 notificationRepository.deleteAlert(myAlert)
                 removeWork("${myAlert.startLongDate}", context)
             }
-        }
+       // }
 
         return Result.success()
     }
 
     private fun checkTime(alert: UserAlerts): Boolean {
-        val currentTimeInMillis = Calendar.getInstance().timeInMillis
-        val res=((currentTimeInMillis >= alert.startLongDate)&& (currentTimeInMillis <= alert.endLongDate))
-        Log.e("TAG", "checktime: __________"+res)
+        val currentTimeInMillis =  Date().time
+        val res=(currentTimeInMillis >= alert.startLongDate)&& (currentTimeInMillis <= alert.endLongDate)
+        Log.e("TAG", "checktime: __________"+res +alert.startLongDate+"  "+alert.endLongDate)
         return res
     }
 }

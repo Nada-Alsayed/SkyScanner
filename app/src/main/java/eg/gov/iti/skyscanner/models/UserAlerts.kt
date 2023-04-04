@@ -11,6 +11,7 @@ data class UserAlerts(
     var startLongDate:Long,
     @ColumnInfo(name = "endLongDate")
     var endLongDate:Long,
-    @ColumnInfo(name = "alertOption")
+  //  @ColumnInfo(name = "alertOption")
+    var timeAlert:Long,
     var alertOption:String
 )

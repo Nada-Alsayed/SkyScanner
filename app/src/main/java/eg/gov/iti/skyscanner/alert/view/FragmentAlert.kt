@@ -56,8 +56,9 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
     private lateinit var userAlerts: UserAlerts
     private var startLongDate: Long = 0
     private var endLongDate: Long = 0
-    private var startDate: Calendar = Calendar.getInstance()
-    private var endDate: Calendar = Calendar.getInstance()
+    private lateinit var startDate: String
+    private lateinit var endDate: String
+    private lateinit var time: String
     override fun onResume() {
         super.onResume()
         val activity: Activity? = activity
@@ -83,7 +84,7 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
     }
 
     private fun init() {
-//userAlerts= UserAlerts(0,1,1,"")
+        userAlerts= UserAlerts(0,1,1,"")
         viewModelFactory = AlertViewModelFactory(
             Repository.getInstance(
                 APIClient.getInstance(), ConcreteLocalSource(requireContext())
@@ -121,7 +122,7 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
     private fun setOneTimeWorkRequest(alert: UserAlerts, description: String, icon: String) {
         Log.e("TAG", "notify: *************8888 " + description + icon)
 
-        createWorkRequest(alert, description, icon, myView.context, alert.startLongDate)
+        createWorkRequest(alert, description, icon, myView.context, alert.timeAlert)
     }
 
     /*fun askForDrawOverlaysPermission(activity: Activity, requestCode: Int) {
@@ -187,11 +188,23 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
         viewModel.getStoredWeather()
 
         alertActBinding.startDateId.setOnClickListener {
-            showDateTimePicker(AlertConst.START_EDIT_TEXT)
+           // showDateTimePicker(AlertConst.START_EDIT_TEXT)
+            setAlarmDateAndTime{(timeInMillis, dateInMillis) ->
+                time=getTimeToAlert(timeInMillis,"en")
+                startDate=getDateToAlert(dateInMillis,"en")
+                alertActBinding.startDateId.setText("$startDate \n $time")
+                userAlerts.startLongDate = dateInMillis
+                userAlerts.timeAlert = timeInMillis
+                Log.d("Alarm", "Time: $timeInMillis, Date: $dateInMillis")
+            }
         }
         //endDateid = dialog.findViewById(R.id.endDateid)
         alertActBinding.endDateid.setOnClickListener {
-            showDateTimePicker(AlertConst.END_EDIT_TEXT)
+           setAlarmEndDate {
+               endDate=getDateToAlert(it,"en")
+               userAlerts.endLongDate=it
+               alertActBinding.endDateid.setText("$endDate \n $time")
+           }
         }
         /*alertOptions.setOnCheckedChangeListener{_,checkedId->
             val radioButton: RadioButton = dialog.findViewById(checkedId)
@@ -225,7 +238,7 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
     private fun storeInRoom() {
         runBlocking {
             lifecycleScope.launch() {
-                userAlerts = UserAlerts(startLongDate = startLongDate,endLongDate = endLongDate, alertOption = "null")
+              //  userAlerts = UserAlerts(startLongDate = startLongDate,endLongDate = endLongDate, alertOption = "null")
                 viewModel.insertAlert(userAlerts)
             }.join()
 
@@ -270,7 +283,7 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
         }
     }
 
-    fun showDateTimePicker(label: String) {
+    /*fun showDateTimePicker(label: String) {
         val currentDate = Calendar.getInstance()
         var date: Calendar = Calendar.getInstance()
         val datePickerDialog = DatePickerDialog(
@@ -296,6 +309,52 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
         )
         datePickerDialog.datePicker.minDate = currentDate.timeInMillis;
         datePickerDialog.show();
+    }*/
+
+
+    private fun setAlarmDateAndTime(callback: (Pair<Long, Long>) -> Unit) {
+        Calendar.getInstance().apply {
+            this.set(Calendar.SECOND, 0)
+            this.set(Calendar.MILLISECOND, 0)
+            val datePickerDialog = DatePickerDialog(
+                requireContext(),
+                0,
+                { _, year, month, day ->
+                    this.set(Calendar.YEAR, year)
+                    this.set(Calendar.MONTH, month)
+                    this.set(Calendar.DAY_OF_MONTH, day)
+                    TimePickerDialog(
+                        requireContext(),
+                        0,
+                        { _, hour, minute ->
+                            this.set(Calendar.HOUR_OF_DAY, hour)
+                            this.set(Calendar.MINUTE, minute)
+                            callback(this.timeInMillis to this.timeInMillis.dateToLong())
+                        },
+                        this.get(Calendar.HOUR_OF_DAY),
+                        this.get(Calendar.MINUTE),
+                        false
+                    ).show()
+                },
+                this.get(Calendar.YEAR),
+                this.get(Calendar.MONTH),
+                this.get(Calendar.DAY_OF_MONTH)
+            )
+            datePickerDialog.datePicker.minDate = Calendar.getInstance().timeInMillis
+            datePickerDialog.show()
+        }
+    }
+
+    // Extension function to convert a date to a long value
+    fun Long.dateToLong(): Long {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = this
+        return calendar.apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
     }
 
     private fun updateLabel(calendar: Calendar, editText: EditText): Long {
@@ -306,7 +365,34 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
         editText.setText(dateFormat.format(calendar.time))
         return milliseconds
     }
+    fun getDateToAlert(timestamp: Long, language: String): String{
+        return SimpleDateFormat("M/d/yyyy",Locale(language)).format(timestamp)
+    }
 
+    fun getTimeToAlert(timestamp: Long, language: String): String{
+        return SimpleDateFormat("h:mm a",Locale(language)).format(timestamp)
+    }
+    private fun setAlarmEndDate(callback: (Long) -> Unit) {
+        Calendar.getInstance().apply {
+            this.set(Calendar.SECOND, 0)
+            this.set(Calendar.MILLISECOND, 0)
+            val datePickerDialog = DatePickerDialog(
+                requireContext(),
+                0,
+                { _, year, month, day ->
+                    this.set(Calendar.YEAR, year)
+                    this.set(Calendar.MONTH, month)
+                    this.set(Calendar.DAY_OF_MONTH, day)
+                    callback(this.timeInMillis)
+                },
+                this.get(Calendar.YEAR),
+                this.get(Calendar.MONTH),
+                this.get(Calendar.DAY_OF_MONTH)
+            )
+            datePickerDialog.datePicker.minDate = Calendar.getInstance().timeInMillis
+            datePickerDialog.show()
+        }
+    }
     override fun deleteOnClick(userAlert: UserAlerts) {
         val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
         builder.setCancelable(true)

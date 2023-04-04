@@ -39,9 +39,9 @@ class AdapterAlert(private val context: Context,
         if (userAlerts != null) {
             var myAlert: UserAlerts = userAlerts[position]
             holder.binding.txtStartDay.text = RetrofitHelper.convertTimeInMillisIntoString(myAlert.startLongDate,"dd/MM/yyyy",lang)
-            holder.binding.timeStartDate.text = RetrofitHelper.convertTimeInMillisIntoString(myAlert.startLongDate,"HH:mm a",lang)
+            holder.binding.timeStartDate.text = RetrofitHelper.convertTimeInMillisIntoString(myAlert.timeAlert,"HH:mm a",lang)
             holder.binding.txtEndDay.text = RetrofitHelper.convertTimeInMillisIntoString(myAlert.endLongDate,"dd/MM/yyyy",lang)
-            holder.binding.timeEndDate.text = RetrofitHelper.convertTimeInMillisIntoString(myAlert.endLongDate,"HH:mm a",lang)
+            holder.binding.timeEndDate.text = RetrofitHelper.convertTimeInMillisIntoString(myAlert.timeAlert,"HH:mm a",lang)
             holder.binding.iconDel.setOnClickListener {
                 onButtonClickListener.deleteOnClick(myAlert)
             }
