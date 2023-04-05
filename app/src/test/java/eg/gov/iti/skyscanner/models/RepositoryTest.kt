@@ -34,11 +34,11 @@ class RepositoryTest {
 
     val weather1 = WeatherDetail(
         emptyList(),
-        WeatherDetail.Current(0, 0.0, 0, 0.0, 1, 1, 1, 1, 0.0, 0.0, 1, emptyList(), 1, 0.0),
+        WeatherDetail.Current(1, 0.0, 0, 0.0, 1, 1, 1, 1, 0.0, 0.0, 1, emptyList(), 1, 0.0),
         emptyList(),
         emptyList(),
-        0.0,
-        0.0,
+        1.0,
+        1.0,
         "",
         0,
         0
@@ -48,22 +48,22 @@ class RepositoryTest {
         WeatherDetail.Current(0, 0.0, 0, 0.0, 1, 1, 1, 1, 0.0, 0.0, 1, emptyList(), 1, 0.0),
         emptyList(),
         emptyList(),
-        0.0,
-        0.0,
+        2.0,
+        2.0,
         "",
         0,
         0
     )
     val weather3 = WeatherDetail(
         emptyList(),
-        WeatherDetail.Current(0, 0.0, 0, 0.0, 1, 1, 1, 1, 0.0, 0.0, 1, emptyList(), 1, 0.0),
+        WeatherDetail.Current(3, 0.0, 0, 0.0, 1, 1, 1, 1, 0.0, 0.0, 1, emptyList(), 1, 0.0),
         emptyList(),
         emptyList(),
-        0.0,
-        0.0,
+        3.0,
+        3.0,
         "",
         0,
-        0
+        1
     )
     val listWeather = mutableListOf<WeatherDetail>(weather1, weather2, weather3)
 
@@ -80,7 +80,7 @@ class RepositoryTest {
 
         repo = Repository.getInstance(fakeRemoteSource, fakeLocalSource)
     }
-
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun funGetWeather_returnWeatherDetailObj() = mainRule.runBlockingTest {
         //Given
@@ -96,7 +96,7 @@ class RepositoryTest {
         }
 
     }
-
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun funGetWeatherKelvin_returnWeatherDetailObj() = mainRule.runBlockingTest {
         //Given
@@ -113,6 +113,40 @@ class RepositoryTest {
 
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun insertWeather_Weather_(weather: WeatherDetail) = mainRule.runBlockingTest {
+        //Given
+        val weather4 = WeatherDetail(
+            emptyList(),
+            WeatherDetail.Current(5, 5.0, 0, 5.0, 1, 1, 1, 1, 0.0, 0.0, 1, emptyList(), 1, 0.0),
+            emptyList(),
+            emptyList(),
+            55.0,
+            5.0,
+            "",
+            0,
+            1
+        )
+        //when
+        repo.insertWeather(weather4)
+        //then
+        assertThat(listWeather[listWeather.size-1].lat, Matchers.`is`(55))
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun insertFavLocation_favouriteLocation_(favModel: FavModel) = mainRule.runBlockingTest {
+        //Given
+        val fav4 = FavModel(3.0, 3.0)
+        //when
+        repo.insertFavWeather(fav4)
+        val size = listFav.size
+        //then
+        assertThat(size, Matchers.`is`(4))
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun deleteAllFavLocation_favouriteLocation_(favModel: FavModel) = mainRule.runBlockingTest {
         //Given
@@ -123,14 +157,14 @@ class RepositoryTest {
         assertThat(size, Matchers.`is`(2))
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun deleteAllWeather() = mainRule.runBlockingTest {
+    fun deleteAllWeather_noInput_noReturn() = mainRule.runBlockingTest {
         //Given
         // there is no given params
         //when
         repo.deleteAll()
         val size = listWeather.size
-
         //then
         assertThat(size, Matchers.`is`(0))
     }

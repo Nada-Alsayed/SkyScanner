@@ -26,26 +26,26 @@ class FakeLocalSource(
     }
 
     override suspend fun insertWeather(weatherDetail: WeatherDetail) {
-        weatherDetailList.add(weatherDetail)
+        weatherDetailList?.add(weatherDetail)
     }
 
     override suspend fun insertWeatherFav(fav: FavModel) {
-        favLocationList.add(fav)
+        favLocationList?.add(fav)
     }
 
     override suspend fun insertUserAlerts(userAlerts: UserAlerts) {
-        userAlertsList.add(userAlerts)
+        userAlertsList?.add(userAlerts)
     }
 
     override suspend fun deleteAllWeather() {
-        weatherDetailList.clear()
+        weatherDetailList?.clear()
     }
 
     override suspend fun deleteUserAlert(userAlerts: UserAlerts) {
-        userAlertsList.remove(userAlerts)
+        userAlertsList?.remove(userAlerts)
     }
 
     override suspend fun deleteWeather(favLocation: FavModel) {
-        favLocationList.remove(favLocation)
+        favLocationList?.remove(favLocation)
     }
 }

@@ -21,6 +21,12 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // other configurations here
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas"]
+            }
+        }
     }
 
     buildTypes {
@@ -40,7 +46,8 @@ android {
 
 dependencies {
     implementation 'androidx.test:runner:1.5.2'
-
+    // other dependencies here
+    kapt 'com.github.bumptech.glide:compiler:4.14.2'
 
     // hamcrest
     testImplementation "org.hamcrest:hamcrest:2.2"
