@@ -75,6 +75,7 @@ class FragmentFavourite : Fragment(), OnClickInterface {
                         binding.RVFav.adapter=adapterFavourite
                     }
                     is RequestState.Failure -> {
+                        binding.pBar.visibility = View.VISIBLE
                         Snackbar.make(requireContext(),requireView(),"there is a problem",Snackbar.LENGTH_SHORT).show()
                     }
                     is RequestState.Loading -> {
