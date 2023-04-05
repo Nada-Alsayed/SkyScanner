@@ -47,7 +47,6 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/timeEndDate"
-        a
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
