@@ -65,41 +65,24 @@ class FragmentFavourite : Fragment(), OnClickInterface {
         viewModel = ViewModelProvider(this, viewModelFactory).get(FavouriteViewModel::class.java)
 
         viewModel.getStoredFavWeather()
-        /*lifecycleScope.launch {
-            viewModel.favWeatherFromRoom.collect() {
-                if (it != null) {
-                    adapterFavourite.setFavList()
-                    binding.RVFav.adapter=adapterFavourite
-                }
-            }
-        }*/
         lifecycleScope.launch() {
             viewModel.favWeatherFromRoom.collect { db ->
                 when (db) {
                     is RequestState.Success -> {
+                        binding.pBar.visibility = View.GONE
+                        binding.RVFav.visibility= View.VISIBLE
                         db.data?.let { adapterFavourite.setFavList(it) }
                         binding.RVFav.adapter=adapterFavourite
                     }
-                    else ->{}
+                    is RequestState.Failure -> {
+                        Snackbar.make(requireContext(),requireView(),"there is a problem",Snackbar.LENGTH_SHORT).show()
+                    }
+                    is RequestState.Loading -> {
+                        binding.pBar.visibility = View.VISIBLE
+                    }
                 }
             }
         }
-      /*val requestAddFavoritePlace =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-            { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    val data = result.data
-                    val lat = data?.getStringExtra("Lat")?.toDoubleOrNull()
-                    Toast.makeText(context,"vvvvvvvv"+lat,Toast.LENGTH_SHORT).show()
-                    val lon = data?.getStringExtra("Lon")?.toDoubleOrNull()
-                    if (lat != null) {
-                        if (lon != null) {
-                            addInRoom(lat,lon)
-                        }
-                    }
-                }
-            }*/
-
         binding.floatingActionButton.setOnClickListener {
             editor.putString(ActivityFlag, "fragFavourite").apply()
             val intent = Intent(requireContext(), MapsActivity::class.java)
@@ -171,9 +154,24 @@ class FragmentFavourite : Fragment(), OnClickInterface {
             viewModel.deleteOneFav(favModel)
         }
         builder.setNegativeButton(android.R.string.cancel){ _, _ -> }
-
-      //  val dialog: AlertDialog = builder.create()
-      //  dialog.setCanceledOnTouchOutside(false)
         builder.show()
     }
 }
+
+//  val dialog: AlertDialog = builder.create()
+//  dialog.setCanceledOnTouchOutside(false)
+/*val requestAddFavoritePlace =
+      registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+      { result ->
+          if (result.resultCode == Activity.RESULT_OK) {
+              val data = result.data
+              val lat = data?.getStringExtra("Lat")?.toDoubleOrNull()
+              Toast.makeText(context,"vvvvvvvv"+lat,Toast.LENGTH_SHORT).show()
+              val lon = data?.getStringExtra("Lon")?.toDoubleOrNull()
+              if (lat != null) {
+                  if (lon != null) {
+                      addInRoom(lat,lon)
+                  }
+              }
+          }
+      }*/

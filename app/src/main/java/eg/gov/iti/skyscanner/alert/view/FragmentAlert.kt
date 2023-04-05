@@ -108,10 +108,13 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
             viewModel.alertFromRoom.collect { db ->
                 when (db) {
                     is RequestState.Success -> {
+
                         db.data?.let { adapterAlert.setAlertList(it) }
                         binding.RVAlert.adapter = adapterAlert
                     }
-                    else -> {}
+                    else -> {
+                        binding.pBar.visibility = View.VISIBLE
+                    }
                 }
             }
         }
