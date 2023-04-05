@@ -19,19 +19,23 @@ class SplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         bindingSplashScreen= ScreenSplashBinding.inflate(layoutInflater)
         setContentView(bindingSplashScreen.root)
+
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+
         var lang = sharedPreferences.getString(Language, "en")
-        Toast.makeText(this,lang,Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this,lang,Toast.LENGTH_SHORT).show()
+
         if (lang.equals("ar")){
             LanguageManager.setLanguage(this,"ar")
         }else{
             LanguageManager.setLanguage(this,"en")
         }
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         Handler().postDelayed({
             val intent = Intent(this@SplashScreen, MainActivity::class.java)
             startActivity(intent)
             finish()
-        }, 1900)
+        }, 1950)
     }
 }

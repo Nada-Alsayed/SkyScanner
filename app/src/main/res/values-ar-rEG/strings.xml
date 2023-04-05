@@ -35,5 +35,27 @@
     <string name="title_activity_maps">ماب</string>
     <string name="unit">وحدات القياس</string>
     <string name="miles_hour">ميل/ساعة</string>
+    <string name="confirm_yes">نعم</string>
     <string name="meter_sec">متر/ثانية</string>
+    <string name="are_you_sure">هل انت متاكد انك تريد ازالة هذا الموقع من قائمتك المفضلة ؟</string>
+    <string name="delete_alert_title">تنبية للازالة</string>
+    <string name="location_alert_title">تنبية الخريطة</string>
+    <string name="from">من</string>
+
+    <string name="to">الى</string>
+
+    <string name="save">حفظ</string>
+    <string name="draw_overlays">من فضلك، قم بتمكين صلاحية رسم الطبقات (Draw Overlays).</string>
+    <string name="draw_overlays_description">لن تتلقى إشعارات بينما تكون التطبيق في الخلفية إذا قمت بتعطيل هذه الصلاحيات.  يرجى تمكين:  عرض النوافذ المنبثقة أثناء التشغيل في الخلفية. عرض النافذة المنبثقة.</string>
+    <string name="go_to_settings">الاعدادات</string>
+    <string name="NoAlerts">"لا يوجد تحذيرات. الطقس جيد "</string>
+
+    <string name="error_msg_permission_required">برجاء تفعيل الصلاحيات االمطلوبة للعمل بشكل جيد</string>
+    <string name="empty_alarm_from">يجب تحديد تاريخ البداية</string>
+    <string name="empty_alarm_to">يجب تحديد تاريخ الانتهاء</string>
+    <string name="warning">تحذير</string>
+    <string name="ok">حسنا</string>
+    <string name="dismiss">تجاهل</string>
+    <string name="weather_alert">تنية الطقس</string>
+    <string name="be_prepared">كن مستعدا</string>
 </resources>

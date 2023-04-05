@@ -40,7 +40,7 @@ class FragmentSetting : Fragment() {
         sharedPreference = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         editor = sharedPreference.edit()
        // Falerinheit =Imperial: miles/hour
-        var lang = sharedPreference.getString(Language, "n")
+        var lang = sharedPreference.getString(Language, "en")
         var temp = sharedPreference.getString(TempUnit, "metric")
         var notif = sharedPreference.getString(Notification, "enable")
         var loca = sharedPreference.getString(Location, "gps")
@@ -169,10 +169,10 @@ class FragmentSetting : Fragment() {
             }
         }
     }
-    fun changeLanguage(language: String) {
+    /*fun changeLanguage(language: String) {
         activity?.let { LanguageManager.setLanguage(it, language) }
         activity?.recreate()
-    }
+    }*/
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

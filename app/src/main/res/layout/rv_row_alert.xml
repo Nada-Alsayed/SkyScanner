@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/conAl"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="5dp"
     android:layout_marginTop="12dp"
     android:layout_marginBottom="12dp"
-    android:id="@+id/conAl"
-    android:background="@drawable/rounded_button">
+    android:background="@drawable/rounded_button"
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/timeStartDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
         android:padding="2dp"
         android:text="2:50 AM"
         android:textColor="@color/white"
-        android:textSize="19sp"
-android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toStartOf="@+id/column"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtStartDay"
@@ -31,10 +30,11 @@ android:layout_marginStart="10dp"
         android:padding="5dp"
         android:text="4/7"
         android:textColor="@color/white"
-        android:textSize="15sp"
+        android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="@+id/timeStartDate"
         app:layout_constraintStart_toStartOf="@+id/timeStartDate"
         app:layout_constraintTop_toBottomOf="@+id/timeStartDate" />
+
     <TextView
         android:id="@+id/column"
         android:layout_width="wrap_content"
@@ -43,13 +43,12 @@ android:layout_marginStart="10dp"
         android:padding="10dp"
         android:text=":"
         android:textColor="@color/white"
-        android:textSize="22dp"
+        android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/timeStartDate"
         app:layout_constraintEnd_toStartOf="@+id/timeEndDate"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        a
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/timeEndDate"
@@ -58,10 +57,11 @@ android:layout_marginStart="10dp"
         android:padding="2dp"
         android:text="2:50 AM"
         android:textColor="@color/white"
-        android:textSize="19sp"
+        android:textSize="17sp"
 
         app:layout_constraintStart_toEndOf="@+id/column"
         app:layout_constraintTop_toTopOf="@+id/timeStartDate" />
+
     <TextView
         android:id="@+id/txtEndDay"
         android:layout_width="wrap_content"
@@ -69,18 +69,19 @@ android:layout_marginStart="10dp"
         android:padding="5dp"
         android:text="4/7"
         android:textColor="@color/white"
-        android:textSize="15sp"
+        android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="@+id/timeEndDate"
         app:layout_constraintStart_toStartOf="@+id/timeEndDate"
         app:layout_constraintTop_toBottomOf="@+id/timeEndDate" />
+
     <ImageView
         android:id="@+id/iconDel"
         android:layout_width="40dp"
         android:layout_height="45dp"
-        android:layout_marginEnd="3dp"
+        android:layout_marginEnd="8dp"
         android:padding="5dp"
+        android:src="@drawable/baseline_delete_outline_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/baseline_delete_outline_24"/>
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

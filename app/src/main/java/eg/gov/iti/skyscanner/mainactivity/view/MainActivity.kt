@@ -50,7 +50,8 @@ class MainActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val onBoardingCompleted = sharedPreferences.getBoolean(OnBoardingPref, false)
         var lang = sharedPreferences.getString(Language, "en")
-        Toast.makeText(this,lang,Toast.LENGTH_SHORT).show()
+
+      //  Toast.makeText(this,lang,Toast.LENGTH_SHORT).show()
         if (lang.equals("ar")){
             LanguageManager.setLanguage(this,"ar")
         }else{

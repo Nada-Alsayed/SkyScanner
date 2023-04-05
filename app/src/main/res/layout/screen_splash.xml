@@ -64,19 +64,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/anim_icon" />
 
-<!--    <Button-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="124dp"-->
-<!--        android:background="@drawable/rounded_button"-->
-<!--        android:padding="10dp"-->
-<!--        android:text="@string/get_started"-->
-
-<!--        android:textColor="@color/white"-->
-<!--        android:textSize="18dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/text_name" />-->
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

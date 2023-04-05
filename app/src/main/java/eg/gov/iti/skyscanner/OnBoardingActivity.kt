@@ -3,14 +3,15 @@ package eg.gov.iti.skyscanner
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import eg.gov.iti.skyscanner.databinding.ActivityOnboardingBinding
-import eg.gov.iti.skyscanner.mainactivity.view.MainActivity
 import eg.gov.iti.skyscanner.map.MapsActivity
+import eg.gov.iti.skyscanner.settings.view.Language
 import eg.gov.iti.skyscanner.settings.view.Location
+import eg.gov.iti.skyscanner.settings.view.Notification
 
-const val OnBoardingPref="onBoarding_completed"
+const val OnBoardingPref = "onBoarding_completed"
+
 class OnBoardingActivity : AppCompatActivity() {
     lateinit var binding: ActivityOnboardingBinding
 
@@ -18,22 +19,36 @@ class OnBoardingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityOnboardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString(Notification, "enable").apply()
+        sharedPreferences.edit().putString(Location, "gps").apply()
+        sharedPreferences.edit().putString(Language, "en").apply()
+
+        binding.switch1.isChecked = true
+
         binding.btnSetUpDone.setOnClickListener {
+            sharedPreferences.edit().putBoolean(OnBoardingPref, true).apply()
             if (binding.rbgps.isChecked) {
-                sharedPreferences.edit().putBoolean(OnBoardingPref, true).apply()
-                sharedPreferences.edit().putString(Location,"gps").apply()
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-                Toast.makeText(applicationContext, "gps", Toast.LENGTH_SHORT).show()
+                sharedPreferences.edit().putString(Location, "gps").apply()
+                //Toast.makeText(applicationContext, "gps", Toast.LENGTH_SHORT).show()
             } else if (binding.rbMap.isChecked) {
-                sharedPreferences.edit().putBoolean(OnBoardingPref, true).apply()
-                sharedPreferences.edit().putString(Location,"map").apply()
+                sharedPreferences.edit().putString(Location, "map").apply()
+                //Toast.makeText(applicationContext, "map", Toast.LENGTH_SHORT).show()
+            }
+            binding.switch1.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    // Switch is on
+                    sharedPreferences.edit().putString(Notification, "enable").apply()
+                } else {
+                    // Switch is off
+                    sharedPreferences.edit().putString(Notification, "disable").apply()
+                }
+            }
+            if (binding.rbMap.isChecked || binding.rbgps.isChecked) {
                 val intent = Intent(this, MapsActivity::class.java)
                 startActivity(intent)
                 finish()
-                Toast.makeText(applicationContext, "map", Toast.LENGTH_SHORT).show()
             }
         }
     }
