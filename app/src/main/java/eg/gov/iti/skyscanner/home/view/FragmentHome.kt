@@ -7,6 +7,7 @@ import android.location.Address
 import android.location.Geocoder
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,20 +15,18 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import eg.gov.iti.skyscanner.DataBase.ConcreteLocalSource
+import eg.gov.iti.skyscanner.R
 import eg.gov.iti.skyscanner.databinding.FragmentHomeBinding
 import eg.gov.iti.skyscanner.home.viewModel.HomeViewModel
 import eg.gov.iti.skyscanner.home.viewModel.HomeViewModelFactory
-import eg.gov.iti.skyscanner.models.MyIcons
 import eg.gov.iti.skyscanner.models.MyIcons.replaceAPIIcon
 import eg.gov.iti.skyscanner.models.Repository
 import eg.gov.iti.skyscanner.models.WeatherDetail
 import eg.gov.iti.skyscanner.network.APIClient
 import eg.gov.iti.skyscanner.network.RequestState
-import eg.gov.iti.skyscanner.settings.view.ActivityFlag
-import eg.gov.iti.skyscanner.settings.view.Language
-import eg.gov.iti.skyscanner.settings.view.MeasureUnit
-import eg.gov.iti.skyscanner.settings.view.TempUnit
+import eg.gov.iti.skyscanner.settings.view.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -38,6 +37,8 @@ import java.util.*
 
 const val Latitude = "lat"
 const val Longitude = "lon"
+const val LongitudeMap = "lonMap"
+const val LatitudeMap = "latMap"
 
 class FragmentHome : Fragment() {
     lateinit var binding: FragmentHomeBinding
@@ -51,35 +52,48 @@ class FragmentHome : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val activity: Activity? = activity
-        if (activity != null) {
-            if (sharedPreference.getString(ActivityFlag, "m").equals("fragFavourite")) {
-                activity.title = getString(eg.gov.iti.skyscanner.R.string.favourites)
-                editor.putString(ActivityFlag, "fragHome").apply()
-            } else {
-                activity?.title = getString(eg.gov.iti.skyscanner.R.string.home)
-            }
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val rootView=requireActivity().findViewById<View>(android.R.id.content)
+
         sharedPreference = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         editor = sharedPreference.edit()
+
+        val activity: Activity? = activity
+        if (activity != null) {
+            if (sharedPreference.getString(ActivityFlag, "fragFavourite").equals("fragFavourite")) {
+                activity.title = getString(eg.gov.iti.skyscanner.R.string.favourites)
+                Log.e("TAG", "homenamecheck1: ${sharedPreference.getString(ActivityFlag,"m")}" )
+                // editor.putString(ActivityFlag, "fragHome").apply()
+            } else if(sharedPreference.getString(ActivityFlag, "fragHome").equals("fragHome")){
+                activity?.title = getString(eg.gov.iti.skyscanner.R.string.home)
+                Log.e("TAG", "homenamecheck2: ${sharedPreference.getString(ActivityFlag,"m")}" )
+            }
+            else
+            {
+                activity?.title = getString(eg.gov.iti.skyscanner.R.string.home)
+                Log.e("TAG", "homenamecheck3: ${sharedPreference.getString(ActivityFlag,"m")}" )
+            }
+        }
+
         var lat = sharedPreference.getString(Latitude, "N/v")?.toDoubleOrNull()
         var lon = sharedPreference.getString(Longitude, "N/v")?.toDoubleOrNull()
 
+        var latMap = sharedPreference.getString(LatitudeMap, "N/v")?.toDoubleOrNull()
+        var lonMap = sharedPreference.getString(LongitudeMap, "N/v")?.toDoubleOrNull()
+
         var lang = sharedPreference.getString(Language, "ar")
+        var location = sharedPreference.getString(Location, "gps")
         var unit = sharedPreference.getString(TempUnit, "metric")
         var measureUnit = sharedPreference.getString(MeasureUnit, "m/s")
+       var flagname= sharedPreference.getString(ActivityFlag, "fragHome")
+       // Toast.makeText(requireContext(), "flagname " + flagname, Toast.LENGTH_SHORT).show()
+        Log.e("TAG", "homename1: ${flagname}" )
 
-        Toast.makeText(requireContext(), "lat= " + lat, Toast.LENGTH_SHORT).show()
-        Toast.makeText(requireContext(), "lang" + lang, Toast.LENGTH_SHORT).show()
+        //Toast.makeText(requireContext(), "lang" + lang, Toast.LENGTH_SHORT).show()
         //checkLang(lang)
         viewModelFactory = HomeViewModelFactory(
             Repository.getInstance(
@@ -87,62 +101,29 @@ class FragmentHome : Fragment() {
             )
         )
         viewModel = ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]
-        if (isNetworkAvailable(requireContext())) {
-            getSiutableData(lat, lon, lang, unit)
-            // getSiutableData(33.44, -94.04, lang, unit)
-            lifecycleScope.launch() {
-                viewModel.weather.collect { result ->
-                    when (result) {
-                        is RequestState.Loading -> {
-                            binding.scrollView.visibility = View.GONE
-                            binding.iconFail.visibility = View.GONE
-                            binding.pBar.visibility = View.VISIBLE
-                        }
-                        is RequestState.Success -> {
-                            binding.scrollView.visibility = View.VISIBLE
-                            binding.pBar.visibility = View.GONE
-                            binding.iconFail.visibility = View.GONE
-                            //viewModel.deleteAll()
-                            viewModel.insertWeather(result.data)
-                            if (unit != null) {
-                                if (lang != null) {
-                                    displayRVDay(result.data, unit, lang)
-                                    displayRVHour(result.data, unit, lang)
-                                }
-                                if (measureUnit != null) {
-                                    if (lang != null) {
-                                        displayWeather(result.data, unit, measureUnit, lang)
-                                    }
-                                }
-                            }
 
-                        }
-                        else -> {
-                            binding.scrollView.visibility = View.GONE
-                            binding.pBar.visibility = View.GONE
-                            binding.iconFail.visibility = View.VISIBLE
-                            Toast.makeText(
-                                requireContext(),
-                                "Check Your Internet Connection",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
+        if (isNetworkAvailable(requireContext())) {
+            if (location.equals("map")) {
+                if(flagname.equals("fragFavourite")){
+                    Log.e("TAG", "homename2: ${flagname}" )
+                    getSiutableData(lat, lon, lang, unit)
+                    retrieveRetrofitData(lat, lon, lang, measureUnit, unit)
+                    editor.putString(ActivityFlag, "fragHome").apply()
+                    Log.e("TAG", "homename3:  ${sharedPreference.getString(ActivityFlag,"m")}" )
+                }else {
+                    getSiutableData(latMap, lonMap, lang, unit)
+                    retrieveRetrofitData(latMap, lonMap, lang, measureUnit, unit)
                 }
+            }else if(location.equals("gps")){
+                Log.e("TAG", "homename4: ${flagname}" )
+                getSiutableData(lat, lon, lang, unit)
+                retrieveRetrofitData(lat, lon, lang, measureUnit, unit)
+                editor.putString(ActivityFlag, "fragHome").apply()
+                Log.e("TAG", "homename5:  ${sharedPreference.getString(ActivityFlag,"m")}" )
 
             }
         } else {
-            /*Snackbar.make(binding.root, "you're offline, Check your network", Snackbar.LENGTH_LONG)
-                .show()*/
-            // Snackbar.make(requireView(), "You're offline, Check your network.", Snackbar.LENGTH_SHORT)
-
-            Toast.makeText(
-                requireContext(),
-                "you're offline, Check your network",
-                Toast.LENGTH_SHORT
-            )
-                .show()
-
+           // Toast.makeText(requireContext(),"You're offline, this is your stored data",Toast.LENGTH_SHORT).show()
             viewModel.getStoredWeather()
             lifecycleScope.launch() {
                 viewModel.allWeatherFromRoom.collectLatest { db ->
@@ -177,10 +158,54 @@ class FragmentHome : Fragment() {
                     }
                 }
             }
+            Snackbar.make(
+                rootView,
+                R.string.offline,
+                Snackbar.LENGTH_SHORT
+            ).show()
         }
 
     }
 
+    fun retrieveRetrofitData(lat: Double?, lon: Double?, lang: String?,measureUnit: String?, unit: String?){
+        lifecycleScope.launch() {
+            viewModel.weather.collect { result ->
+                when (result) {
+                    is RequestState.Loading -> {
+                        binding.scrollView.visibility = View.GONE
+                        binding.iconFail.visibility = View.GONE
+                        binding.pBar.visibility = View.VISIBLE
+                    }
+                    is RequestState.Success -> {
+                        binding.scrollView.visibility = View.VISIBLE
+                        binding.pBar.visibility = View.GONE
+                        binding.iconFail.visibility = View.GONE
+
+                        viewModel.insertWeather(result.data)
+                        if (unit != null) {
+                            if (lang != null) {
+                                displayRVDay(result.data, unit, lang)
+                                displayRVHour(result.data, unit, lang)
+                            }
+                            if (measureUnit != null) {
+                                if (lang != null) {
+                                    displayWeather(result.data, unit, measureUnit, lang)
+                                }
+                            }
+                        }
+
+                    }
+                    else -> {
+                        binding.scrollView.visibility = View.GONE
+                        binding.pBar.visibility = View.GONE
+                        binding.iconFail.visibility = View.VISIBLE
+                        Snackbar.make(requireContext(),requireView(),
+                            R.string.problem.toString(), Snackbar.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
     fun convertWindSpeedMpS(mph: Double): Double {
         val mps = mph / 2.23694 // conversion factor from mph to m/s
         return mps

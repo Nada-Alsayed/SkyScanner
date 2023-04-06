@@ -4,12 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat.recreate
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import eg.gov.iti.skyscanner.LanguageManager
 import eg.gov.iti.skyscanner.R
 import eg.gov.iti.skyscanner.databinding.FragmentSettingBinding
@@ -19,12 +20,13 @@ const val Language = "lang"
 const val TempUnit = "unit"
 const val Notification = "notification"
 const val Location = "location"
-const val MeasureUnit="measure"
-const val ActivityFlag="flag"
+const val MeasureUnit = "measure"
+const val ActivityFlag = "flag"
 
 class FragmentSetting : Fragment() {
     lateinit var binding: FragmentSettingBinding
     lateinit var sharedPreference: SharedPreferences
+
     //var languageFlag=true
     lateinit var editor: SharedPreferences.Editor
     override fun onResume() {
@@ -39,7 +41,7 @@ class FragmentSetting : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         sharedPreference = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         editor = sharedPreference.edit()
-       // Falerinheit =Imperial: miles/hour
+        // Falerinheit =Imperial: miles/hour
         var lang = sharedPreference.getString(Language, "en")
         var temp = sharedPreference.getString(TempUnit, "metric")
         var notif = sharedPreference.getString(Notification, "enable")
@@ -50,7 +52,7 @@ class FragmentSetting : Fragment() {
             "en" -> {
                 binding.rgLang.check(R.id.rbEnglish)
             }
-            "ar"-> {
+            "ar" -> {
                 binding.rgLang.check(R.id.rbArabic)
             }
         }
@@ -61,8 +63,8 @@ class FragmentSetting : Fragment() {
             "imperial" -> {
                 binding.rgTemperature.check(R.id.rbFahrenheit)
             }
-           "kelvin" -> {
-               binding.rgTemperature.check(R.id.rbKelvin)
+            "kelvin" -> {
+                binding.rgTemperature.check(R.id.rbKelvin)
             }
         }
 
@@ -99,12 +101,12 @@ class FragmentSetting : Fragment() {
                 when (optionId) {
                     R.id.rbArabic -> {
                         editor.putString(Language, "ar").apply()
-                        LanguageManager.setLanguage(requireContext(),"ar")
+                        LanguageManager.setLanguage(requireContext(), "ar")
                         activity?.recreate();
                     }
                     R.id.rbEnglish -> {
                         editor.putString(Language, "en").apply()
-                        LanguageManager.setLanguage(requireContext(),"en")
+                        LanguageManager.setLanguage(requireContext(), "en")
                         activity?.recreate();
                     }
                 }
@@ -134,11 +136,20 @@ class FragmentSetting : Fragment() {
                         editor.putString(Location, "gps").apply()
                     }
                     R.id.rbMap -> {
-                        editor.putString(Location, "map").apply()
-                        editor.putString(ActivityFlag,"fragSettings").apply()
-                        val intent = Intent(requireContext(), MapsActivity::class.java)
-                        startActivity(intent)
-                        activity?.finish()
+                        if (isNetworkAvailable(requireContext())) {
+                            editor.putString(Location, "map").apply()
+                            editor.putString(ActivityFlag, "fragSettings").apply()
+                            val intent = Intent(requireContext(), MapsActivity::class.java)
+                            startActivity(intent)
+                            activity?.finish()
+                        } else {
+                            binding.rgLocation.check(R.id.rbGPS)
+                            Snackbar.make(
+                                requireView(),
+                                R.string.connect_wifi,
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }
@@ -169,6 +180,7 @@ class FragmentSetting : Fragment() {
             }
         }
     }
+
     /*fun changeLanguage(language: String) {
         activity?.let { LanguageManager.setLanguage(it, language) }
         activity?.recreate()
@@ -179,6 +191,12 @@ class FragmentSetting : Fragment() {
     ): View? {
         binding = FragmentSettingBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return connectivityManager.activeNetworkInfo != null && connectivityManager.activeNetworkInfo!!.isConnected
     }
 
 }

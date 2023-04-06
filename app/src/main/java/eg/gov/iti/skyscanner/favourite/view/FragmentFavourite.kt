@@ -53,16 +53,17 @@ class FragmentFavourite : Fragment(), OnClickInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        /*binding.conFavourite.visibility= View.GONE
+        binding.RVFav.visibility= View.GONE*/
         sharedPreference = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         editor = sharedPreference.edit()
         adapterFavourite=AdapterFavourite(emptyList(),requireContext(),this)
-
         viewModelFactory = FavouriteViewModelFactory(
             Repository.getInstance(
                 APIClient.getInstance(), ConcreteLocalSource(requireContext())
             )
         )
-        viewModel = ViewModelProvider(this, viewModelFactory).get(FavouriteViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[FavouriteViewModel::class.java]
 
         viewModel.getStoredFavWeather()
         lifecycleScope.launch() {
@@ -70,26 +71,33 @@ class FragmentFavourite : Fragment(), OnClickInterface {
                 when (db) {
                     is RequestState.Success -> {
                         binding.pBar.visibility = View.GONE
-                        binding.RVFav.visibility= View.VISIBLE
+                        binding.conFavourite.visibility= View.VISIBLE
+                        binding.RVFav.visibility=View.VISIBLE
                         db.data?.let { adapterFavourite.setFavList(it) }
                         binding.RVFav.adapter=adapterFavourite
                     }
                     is RequestState.Failure -> {
                         binding.pBar.visibility = View.VISIBLE
-                        Snackbar.make(requireContext(),requireView(),"there is a problem",Snackbar.LENGTH_SHORT).show()
+                        binding.conFavourite.visibility= View.GONE
+                       binding.RVFav.visibility= View.GONE
+                        Snackbar.make(requireView(),R.string.problem,Snackbar.LENGTH_SHORT).show()
                     }
                     is RequestState.Loading -> {
+                        binding.conFavourite.visibility= View.GONE
+                        binding.RVFav.visibility= View.GONE
                         binding.pBar.visibility = View.VISIBLE
                     }
                 }
             }
         }
         binding.floatingActionButton.setOnClickListener {
+            if(isNetworkAvailable(requireContext())){
             editor.putString(ActivityFlag, "fragFavourite").apply()
             val intent = Intent(requireContext(), MapsActivity::class.java)
-            //requestAddFavoritePlace.launch(intent)
-            startActivityForResult(intent, 1)
-
+            startActivityForResult(intent, 1)}
+            else{
+                Snackbar.make(requireView(),R.string.connect_wifi, Snackbar.LENGTH_SHORT).show()
+            }
         }
 
     }
@@ -134,12 +142,13 @@ class FragmentFavourite : Fragment(), OnClickInterface {
             editor.putString(Latitude, favModel.latitude.toString()).apply()
             editor.putString(Longitude, favModel.longitude.toString()).apply()
             val intent = Intent(activity, MainActivity::class.java)
+            Log.e("TAG", "fragfavonclick: ${sharedPreference.getString(ActivityFlag,"m")}" )
             //  intent.putExtra(IntentKeys.FAVOURITE_Place,favouriteModel)
             startActivity(intent)
         }
-        /*else{
-            Snackbar.make(requireView(), "You're offline. Please,connect to network.", Snackbar.LENGTH_SHORT)
-        }*/
+        else{
+             Snackbar.make(requireView(),R.string.connect_wifi, Snackbar.LENGTH_SHORT).show()
+        }
     }
     fun isNetworkAvailable(context: Context): Boolean {
         val connectivityManager =

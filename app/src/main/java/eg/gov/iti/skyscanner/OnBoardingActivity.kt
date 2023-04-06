@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import eg.gov.iti.skyscanner.databinding.ActivityOnboardingBinding
+import eg.gov.iti.skyscanner.mainactivity.view.MainActivity
 import eg.gov.iti.skyscanner.map.MapsActivity
 import eg.gov.iti.skyscanner.settings.view.Language
 import eg.gov.iti.skyscanner.settings.view.Location
@@ -28,14 +29,6 @@ class OnBoardingActivity : AppCompatActivity() {
         binding.switch1.isChecked = true
 
         binding.btnSetUpDone.setOnClickListener {
-            sharedPreferences.edit().putBoolean(OnBoardingPref, true).apply()
-            if (binding.rbgps.isChecked) {
-                sharedPreferences.edit().putString(Location, "gps").apply()
-                //Toast.makeText(applicationContext, "gps", Toast.LENGTH_SHORT).show()
-            } else if (binding.rbMap.isChecked) {
-                sharedPreferences.edit().putString(Location, "map").apply()
-                //Toast.makeText(applicationContext, "map", Toast.LENGTH_SHORT).show()
-            }
             binding.switch1.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     // Switch is on
@@ -45,11 +38,21 @@ class OnBoardingActivity : AppCompatActivity() {
                     sharedPreferences.edit().putString(Notification, "disable").apply()
                 }
             }
-            if (binding.rbMap.isChecked || binding.rbgps.isChecked) {
+            sharedPreferences.edit().putBoolean(OnBoardingPref, true).apply()
+            if (binding.rbgps.isChecked) {
+                sharedPreferences.edit().putString(Location, "gps").apply()
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+                //Toast.makeText(applicationContext, "gps", Toast.LENGTH_SHORT).show()
+            } else if (binding.rbMap.isChecked) {
+                sharedPreferences.edit().putString(Location, "map").apply()
                 val intent = Intent(this, MapsActivity::class.java)
                 startActivity(intent)
                 finish()
+                //Toast.makeText(applicationContext, "map", Toast.LENGTH_SHORT).show()
             }
+
         }
     }
 }

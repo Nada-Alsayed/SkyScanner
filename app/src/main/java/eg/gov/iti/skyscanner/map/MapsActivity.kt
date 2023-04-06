@@ -19,7 +19,9 @@ import com.google.android.gms.maps.model.MarkerOptions
 import eg.gov.iti.skyscanner.R
 import eg.gov.iti.skyscanner.databinding.ActivityMapsBinding
 import eg.gov.iti.skyscanner.home.view.Latitude
+import eg.gov.iti.skyscanner.home.view.LatitudeMap
 import eg.gov.iti.skyscanner.home.view.Longitude
+import eg.gov.iti.skyscanner.home.view.LongitudeMap
 import eg.gov.iti.skyscanner.mainactivity.view.MainActivity
 import eg.gov.iti.skyscanner.settings.view.ActivityFlag
 import java.io.IOException
@@ -61,8 +63,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             /*Toast.makeText(this, "lat " + it.latitude + "lon " + it.longitude, Toast.LENGTH_SHORT)
                 .show()*/
             latLng = LatLng(it.latitude, it.longitude)
-            sharedPreference.edit().putString(Latitude, it.latitude.toString()).apply()
+            /*sharedPreference.edit().putString(Latitude, it.latitude.toString()).apply()
             sharedPreference.edit().putString(Longitude, it.longitude.toString()).apply()
+
+            sharedPreference.edit().putString(LatitudeMap, it.latitude.toString()).apply()
+            sharedPreference.edit().putString(LongitudeMap, it.longitude.toString()).apply()
+*/
             mMap.addMarker(MarkerOptions().position(latLng).title("Location"))
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
             confirmDialog(latLng)
@@ -91,12 +97,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 val replyIntent = Intent()
                 replyIntent.putExtra("Lat", latLng.latitude.toString())
                 replyIntent.putExtra("Lon", latLng.longitude.toString())
-                Toast.makeText(this,"xx"+latLng.latitude,Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this,"xx"+latLng.latitude,Toast.LENGTH_SHORT).show()
+                //editor.putString(ActivityFlag, "fragHome").apply()
                 setResult(RESULT_OK, replyIntent)
                 finish()
             }
             else if(sharedPreference.getString(ActivityFlag,"m").equals("fragSettings"))
             {
+                sharedPreference.edit().putString(LatitudeMap, latLng.latitude.toString()).apply()
+                sharedPreference.edit().putString(LongitudeMap, latLng.longitude.toString()).apply()
+                sharedPreference.edit().putString(Latitude, latLng.latitude.toString()).apply()
+                sharedPreference.edit().putString(Longitude, latLng.longitude.toString()).apply()
+                Log.e("TAG", "mapact: ${sharedPreference.getString(ActivityFlag,"m")}" )
                 intent=Intent(this,MainActivity::class.java)
                 startActivity(intent)
                 finish()

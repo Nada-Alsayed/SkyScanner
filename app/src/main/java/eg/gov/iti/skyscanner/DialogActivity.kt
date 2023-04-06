@@ -25,7 +25,7 @@ class DialogActivity : AppCompatActivity() {
         icon = intent.getStringExtra(ICON).toString()
         Log.e("TAG", "doWork: *************55" + icon)
         //                              width                               height
-         window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        // window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         setFinishOnTouchOutside(false)
         setUiAndSound()
     }
@@ -43,11 +43,11 @@ class DialogActivity : AppCompatActivity() {
 
     private fun setUiAndSound() {
         startSound()
-        binding.image.setImageResource(aPIIconInt(icon))
+        /*binding.image.setImageResource(aPIIconInt(icon))
         binding.textDescription.text = description
         binding.btnDismiss.setOnClickListener {
             mMediaPlayer!!.stop()
             this.finish()
-        }
+        }*/
     }
 }

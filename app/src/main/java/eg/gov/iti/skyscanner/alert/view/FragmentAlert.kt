@@ -24,6 +24,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import eg.gov.iti.skyscanner.DataBase.ConcreteLocalSource
 import eg.gov.iti.skyscanner.R
 import eg.gov.iti.skyscanner.alert.viewmodel.AlertViewModel
@@ -36,6 +37,7 @@ import eg.gov.iti.skyscanner.models.WeatherDetail
 import eg.gov.iti.skyscanner.network.APIClient
 import eg.gov.iti.skyscanner.network.RequestState
 import eg.gov.iti.skyscanner.settings.view.Language
+import eg.gov.iti.skyscanner.workmanager.WorkRequestManager
 import eg.gov.iti.skyscanner.workmanager.WorkRequestManager.createWorkRequest
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -108,11 +110,16 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
             viewModel.alertFromRoom.collect { db ->
                 when (db) {
                     is RequestState.Success -> {
-
+                        binding.pBar.visibility = View.GONE
+                        binding.conAlert.visibility= View.VISIBLE
                         db.data?.let { adapterAlert.setAlertList(it) }
                         binding.RVAlert.adapter = adapterAlert
                     }
-                    else -> {
+                    is RequestState.Failure -> {
+                        binding.pBar.visibility = View.VISIBLE
+                        Snackbar.make(requireContext(),requireView(),R.string.problem.toString(), Snackbar.LENGTH_SHORT).show()
+                    }
+                    is RequestState.Loading -> {
                         binding.pBar.visibility = View.VISIBLE
                     }
                 }
@@ -124,16 +131,9 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
 
     private fun setOneTimeWorkRequest(alert: UserAlerts, description: String, icon: String) {
         Log.e("TAG", "notify: *************8888 " + description + icon)
-
         createWorkRequest(alert, description, icon, myView.context, alert.timeAlert)
     }
 
-    /*fun askForDrawOverlaysPermission(activity: Activity, requestCode: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(activity)) {
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + activity.packageName))
-            activity.startActivityForResult(intent, requestCode)
-        }
-    }*/
     private fun askForDrawOverlaysPermission() {
         if (!Settings.canDrawOverlays(requireView().context)) {
             if ("xiaomi" == Build.MANUFACTURER.lowercase(Locale.ROOT)) {
@@ -250,6 +250,8 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
                 viewModel.allWeatherFromRoom.collectLatest { alert ->
                     when (alert) {
                         is RequestState.Success -> {
+                            binding.pBar.visibility = View.GONE
+                            binding.conAlert.visibility= View.VISIBLE
                             val weather = alert.data?.get(0)?.let {
                                 WeatherDetail(
                                     it.alerts,
@@ -279,7 +281,13 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
                                 }
                             }
                         }
-                        else -> {}
+                        is RequestState.Failure -> {
+                            binding.pBar.visibility = View.VISIBLE
+                            Snackbar.make(requireContext(),requireView(),R.string.problem.toString(),Snackbar.LENGTH_SHORT).show()
+                        }
+                        is RequestState.Loading -> {
+                            binding.pBar.visibility = View.VISIBLE
+                        }
                     }
                 }
             }
@@ -403,11 +411,9 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
         builder.setMessage(getString(R.string.are_you_sure))
         builder.setPositiveButton(getString(R.string.confirm_yes)) { _, _ ->
             viewModel.deleteAlert(userAlert)
+            WorkRequestManager.removeWork("${userAlert.startLongDate}", requireContext())
         }
         builder.setNegativeButton(android.R.string.cancel) { _, _ -> }
-
-        //  val dialog: AlertDialog = builder.create()
-        //  dialog.setCanceledOnTouchOutside(false)
         builder.show()
 
     }

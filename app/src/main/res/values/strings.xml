@@ -55,4 +55,7 @@
     <string name="dismiss" translatable="false">Dismiss</string>
     <string name="weather_alert" translatable="false">Weather alert</string>
     <string name="be_prepared" translatable="false">Be Prepared</string>
+    <string name="connect_wifi" translatable="false">please,connect to WiFi first.</string>
+    <string name="offline" translatable="false">You\'re offline, this is your stored data</string>
+    <string name="problem" translatable="false">there is a problem</string>
 </resources>
