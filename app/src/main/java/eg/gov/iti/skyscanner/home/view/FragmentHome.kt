@@ -115,6 +115,7 @@ class FragmentHome : Fragment() {
                     retrieveRetrofitData(latMap, lonMap, lang, measureUnit, unit)
                 }
             }else if(location.equals("gps")){
+               // activity?.recreate()
                 Log.e("TAG", "homename4: ${flagname}" )
                 getSiutableData(lat, lon, lang, unit)
                 retrieveRetrofitData(lat, lon, lang, measureUnit, unit)

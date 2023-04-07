@@ -102,7 +102,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 setResult(RESULT_OK, replyIntent)
                 finish()
             }
-            else if(sharedPreference.getString(ActivityFlag,"m").equals("fragSettings"))
+            else
+            // (sharedPreference.getString(ActivityFlag,"m").equals("fragSettings"))
             {
                 sharedPreference.edit().putString(LatitudeMap, latLng.latitude.toString()).apply()
                 sharedPreference.edit().putString(LongitudeMap, latLng.longitude.toString()).apply()

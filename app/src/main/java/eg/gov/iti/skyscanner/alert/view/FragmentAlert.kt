@@ -86,6 +86,7 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
     }
 
     private fun init() {
+        binding.animAlert.visibility= View.VISIBLE
         userAlerts= UserAlerts(0,1,1,"")
         viewModelFactory = AlertViewModelFactory(
             Repository.getInstance(
@@ -114,6 +115,7 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
                         binding.conAlert.visibility= View.VISIBLE
                         db.data?.let { adapterAlert.setAlertList(it) }
                         binding.RVAlert.adapter = adapterAlert
+                        binding.animAlert.visibility= View.GONE
                     }
                     is RequestState.Failure -> {
                         binding.pBar.visibility = View.VISIBLE

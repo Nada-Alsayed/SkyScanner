@@ -55,6 +55,7 @@ class FragmentFavourite : Fragment(), OnClickInterface {
         super.onViewCreated(view, savedInstanceState)
         /*binding.conFavourite.visibility= View.GONE
         binding.RVFav.visibility= View.GONE*/
+        binding.animFav.visibility= View.VISIBLE
         sharedPreference = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         editor = sharedPreference.edit()
         adapterFavourite=AdapterFavourite(emptyList(),requireContext(),this)
@@ -75,6 +76,7 @@ class FragmentFavourite : Fragment(), OnClickInterface {
                         binding.RVFav.visibility=View.VISIBLE
                         db.data?.let { adapterFavourite.setFavList(it) }
                         binding.RVFav.adapter=adapterFavourite
+                        binding.animFav.visibility= View.GONE
                     }
                     is RequestState.Failure -> {
                         binding.pBar.visibility = View.VISIBLE
