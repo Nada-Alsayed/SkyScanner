@@ -45,9 +45,9 @@ class AdapterDailyRV(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (weather != null) {
             var myDay: WeatherDetail.Daily = weather.daily[position]
-            replaceAPIIcon(myDay.weather.get(0).icon, holder.binding.rvImgWDay)
+            replaceAPIIcon(myDay.weather[0].icon, holder.binding.rvImgWDay)
             holder.binding.txtDayName.text = getDay(myDay.dt,lang)
-            holder.binding.rvTxtTemp.text = myDay.weather.get(0).description
+            holder.binding.rvTxtTemp.text = myDay.weather[0].description
             when (unit) {
                 "metric" -> {
                     val formattedNumber1 = formatter.format(myDay.temp.min.toInt())

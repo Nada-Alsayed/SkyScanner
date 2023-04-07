@@ -39,13 +39,13 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var toolbar: Toolbar
     lateinit var toggle: ActionBarDrawerToggle
-    lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
+   // lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     lateinit var sharedPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+      //  mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val onBoardingCompleted = sharedPreferences.getBoolean(OnBoardingPref, false)
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
             finish()
         } else {
             if (sharedPreferences.getString(Location, "gps").equals("gps")) {
-                getLastLocation()
+             //   getLastLocation()
             }
             toolbar = findViewById(R.id.toolBar)
             setSupportActionBar(toolbar)
@@ -84,10 +84,10 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onResume() {
         super.onResume()
-        if (sharedPreferences.getString(Location, "gps").equals("gps")) {
+        /*if (sharedPreferences.getString(Location, "gps").equals("gps")) {
             if (checkPermissions())
                 getLastLocation()
-        }
+        }*/
 
     }
 
@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun checkPermissions(): Boolean {
+ /*   private fun checkPermissions(): Boolean {
         val result = ActivityCompat.checkSelfPermission(
             this, android.Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
@@ -162,13 +162,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    private fun isLocationEnabled(): Boolean {
+*/
+ /*   private fun isLocationEnabled(): Boolean {
         val locationManager: LocationManager =
             getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
             LocationManager.NETWORK_PROVIDER
         )
-    }
+    }*/
 
 }
