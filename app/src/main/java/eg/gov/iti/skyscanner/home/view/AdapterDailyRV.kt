@@ -46,7 +46,14 @@ class AdapterDailyRV(
         if (weather != null) {
             var myDay: WeatherDetail.Daily = weather.daily[position]
             replaceAPIIcon(myDay.weather.get(0).icon, holder.binding.rvImgWDay)
-            holder.binding.txtDayName.text = getDay(myDay.dt,lang)
+            if(position==0 && lang.equals("en")){
+                holder.binding.txtDayName.text = "Today"
+            }else if(position==0 && lang.equals("ar")){
+                holder.binding.txtDayName.text = "Today"
+            }
+            else{
+                holder.binding.txtDayName.text = getDay(myDay.dt,lang)
+            }
             holder.binding.rvTxtTemp.text = myDay.weather.get(0).description
             when (unit) {
                 "metric" -> {
@@ -71,7 +78,7 @@ class AdapterDailyRV(
     }
 
     fun getDay(dt: Int,lang:String): String {
-        val cityTxtFormat = SimpleDateFormat("E",Locale(lang))
+        val cityTxtFormat = SimpleDateFormat("EEEE",Locale(lang))
         val cityTxtData = Date(dt.toLong() * 1000)
         return cityTxtFormat.format(cityTxtData)
     }

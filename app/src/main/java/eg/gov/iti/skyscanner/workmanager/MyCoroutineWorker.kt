@@ -33,10 +33,7 @@ import eg.gov.iti.skyscanner.models.UserAlerts
 import eg.gov.iti.skyscanner.network.APIClient
 import eg.gov.iti.skyscanner.settings.view.Notification
 import eg.gov.iti.skyscanner.workmanager.WorkRequestManager.removeWork
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.time.LocalTime
 import java.util.*
 
@@ -51,7 +48,7 @@ class MyCoroutineWorker (private val context: Context, parameters: WorkerParamet
         val notification = sharedPreference.getString(Notification, "enable")
        // Toast.makeText(context,""+notification,Toast.LENGTH_SHORT).show()
         Log.e("TAG", "doWork: *************+++++++"+notification )
-       // CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             Log.e("TAG", "doWork: *************" )
             val myAlert = convertToUserAlert(inputData.getString(ALERT)!!)
             val description = inputData.getString(DESCRIPTION)
@@ -65,7 +62,7 @@ class MyCoroutineWorker (private val context: Context, parameters: WorkerParamet
 
                 Log.e("TAG", "doWork: *************222 " +description+icon+fromTimeInMillis)
                 if (notification.equals("enable")){
-                    openNotification(context, myAlert, description!!, icon!!, context.getString(R.string.app_name))
+                    openNotification(applicationContext, myAlert, description!!, icon!!, context.getString(R.string.app_name))
                     Log.e("TAG", "doWork: *************333" )
                }
 
@@ -87,7 +84,7 @@ class MyCoroutineWorker (private val context: Context, parameters: WorkerParamet
                     }
                 }
                 notificationRepository.deleteAlert(myAlert)
-                removeWork("${myAlert.startLongDate}", context)
+                removeWork("${myAlert.startLongDate}", applicationContext)
 
                 WorkRequestManager.createWorkRequest(
                     myAlert,
@@ -99,9 +96,9 @@ class MyCoroutineWorker (private val context: Context, parameters: WorkerParamet
             }
             else {
                 notificationRepository.deleteAlert(myAlert)
-                removeWork("${myAlert.startLongDate}", context)
+                removeWork("${myAlert.startLongDate}", applicationContext)
             }
-       // }
+        }
 
         return Result.success()
     }

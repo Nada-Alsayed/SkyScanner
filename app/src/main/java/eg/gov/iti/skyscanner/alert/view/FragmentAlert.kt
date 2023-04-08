@@ -86,8 +86,8 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
     }
 
     private fun init() {
-        binding.animAlert.visibility= View.VISIBLE
-        userAlerts= UserAlerts(0,1,1,"")
+        binding.imAlert.visibility= View.VISIBLE
+        userAlerts = UserAlerts(0, 1, 1, "")
         viewModelFactory = AlertViewModelFactory(
             Repository.getInstance(
                 APIClient.getInstance(), ConcreteLocalSource(requireContext())
@@ -111,19 +111,27 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
             viewModel.alertFromRoom.collect { db ->
                 when (db) {
                     is RequestState.Success -> {
-                        binding.pBar.visibility = View.GONE
-                        binding.conAlert.visibility= View.VISIBLE
-                        db.data?.let { adapterAlert.setAlertList(it) }
-                        binding.RVAlert.adapter = adapterAlert
-                        binding.animAlert.visibility= View.GONE
+                        if (db.data.isNullOrEmpty()) {
+                            binding.imAlert.visibility = View.VISIBLE
+                            binding.conAlert.visibility = View.GONE
+                        } else {
+                            binding.imAlert.visibility = View.GONE
+                            binding.conAlert.visibility = View.VISIBLE
+                           // binding.RVAlert.visibility=View.VISIBLE
+                            db.data?.let { adapterAlert.setAlertList(it) }
+                            binding.RVAlert.adapter=adapterAlert
+                        }
                     }
                     is RequestState.Failure -> {
-                        binding.pBar.visibility = View.VISIBLE
-                        Snackbar.make(requireContext(),requireView(),R.string.problem.toString(), Snackbar.LENGTH_SHORT).show()
+                        binding.imAlert.visibility = View.GONE
+                        binding.conAlert.visibility = View.GONE
+                        Snackbar.make(
+                            requireView(),
+                            R.string.problem.toString(),
+                            Snackbar.LENGTH_SHORT
+                        ).show()
                     }
-                    is RequestState.Loading -> {
-                        binding.pBar.visibility = View.VISIBLE
-                    }
+                    is RequestState.Loading -> {}
                 }
             }
         }
@@ -193,10 +201,10 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
         viewModel.getStoredWeather()
 
         alertActBinding.startDateId.setOnClickListener {
-           // showDateTimePicker(AlertConst.START_EDIT_TEXT)
-            setAlarmDateAndTime{(timeInMillis, dateInMillis) ->
-                time=getTimeToAlert(timeInMillis,"en")
-                startDate=getDateToAlert(dateInMillis,"en")
+            // showDateTimePicker(AlertConst.START_EDIT_TEXT)
+            setAlarmDateAndTime { (timeInMillis, dateInMillis) ->
+                time = getTimeToAlert(timeInMillis, "en")
+                startDate = getDateToAlert(dateInMillis, "en")
                 alertActBinding.startDateId.setText("$startDate \n $time")
                 userAlerts.startLongDate = dateInMillis
                 userAlerts.timeAlert = timeInMillis
@@ -205,11 +213,11 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
         }
         //endDateid = dialog.findViewById(R.id.endDateid)
         alertActBinding.endDateid.setOnClickListener {
-           setAlarmEndDate {
-               endDate=getDateToAlert(it,"en")
-               userAlerts.endLongDate=it
-               alertActBinding.endDateid.setText("$endDate \n $time")
-           }
+            setAlarmEndDate {
+                endDate = getDateToAlert(it, "en")
+                userAlerts.endLongDate = it
+                alertActBinding.endDateid.setText("$endDate \n $time")
+            }
         }
         /*alertOptions.setOnCheckedChangeListener{_,checkedId->
             val radioButton: RadioButton = dialog.findViewById(checkedId)
@@ -243,17 +251,16 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
     private fun storeInRoom() {
         runBlocking {
             lifecycleScope.launch() {
-              //  userAlerts = UserAlerts(startLongDate = startLongDate,endLongDate = endLongDate, alertOption = "null")
+                //  userAlerts = UserAlerts(startLongDate = startLongDate,endLongDate = endLongDate, alertOption = "null")
                 viewModel.insertAlert(userAlerts)
             }.join()
-
             viewModel.getStoredWeather()
             lifecycleScope.launch() {
                 viewModel.allWeatherFromRoom.collectLatest { alert ->
                     when (alert) {
                         is RequestState.Success -> {
                             binding.pBar.visibility = View.GONE
-                            binding.conAlert.visibility= View.VISIBLE
+                            binding.conAlert.visibility = View.VISIBLE
                             val weather = alert.data?.get(0)?.let {
                                 WeatherDetail(
                                     it.alerts,
@@ -285,7 +292,12 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
                         }
                         is RequestState.Failure -> {
                             binding.pBar.visibility = View.VISIBLE
-                            Snackbar.make(requireContext(),requireView(),R.string.problem.toString(),Snackbar.LENGTH_SHORT).show()
+                            Snackbar.make(
+                                requireContext(),
+                                requireView(),
+                                R.string.problem.toString(),
+                                Snackbar.LENGTH_SHORT
+                            ).show()
                         }
                         is RequestState.Loading -> {
                             binding.pBar.visibility = View.VISIBLE
@@ -378,13 +390,15 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
         editText.setText(dateFormat.format(calendar.time))
         return milliseconds
     }
-    fun getDateToAlert(timestamp: Long, language: String): String{
-        return SimpleDateFormat("M/d/yyyy",Locale(language)).format(timestamp)
+
+    fun getDateToAlert(timestamp: Long, language: String): String {
+        return SimpleDateFormat("M/d/yyyy", Locale(language)).format(timestamp)
     }
 
-    fun getTimeToAlert(timestamp: Long, language: String): String{
-        return SimpleDateFormat("h:mm a",Locale(language)).format(timestamp)
+    fun getTimeToAlert(timestamp: Long, language: String): String {
+        return SimpleDateFormat("h:mm a", Locale(language)).format(timestamp)
     }
+
     private fun setAlarmEndDate(callback: (Long) -> Unit) {
         Calendar.getInstance().apply {
             this.set(Calendar.SECOND, 0)
@@ -406,6 +420,7 @@ class FragmentAlert : Fragment(), OnClickAlertInterface {
             datePickerDialog.show()
         }
     }
+
     override fun deleteOnClick(userAlert: UserAlerts) {
         val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
         builder.setCancelable(true)

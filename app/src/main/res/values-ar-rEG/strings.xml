@@ -58,4 +58,7 @@
     <string name="dismiss">تجاهل</string>
     <string name="weather_alert">تنية الطقس</string>
     <string name="be_prepared">كن مستعدا</string>
+    <string name="connect_wifi">حاول الاتصال بالانترنت اولا</string>
+    <string name="offline">" انت غير متصل بالانترنت,وهذه البيانات من المحفوظات "</string>
+    <string name="problem">هناك مشكلة</string>
 </resources>

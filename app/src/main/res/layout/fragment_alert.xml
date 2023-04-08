@@ -48,19 +48,18 @@ tools:context=".alert.view.FragmentAlert">
         app:layout_constraintVertical_bias="0.0"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/anim_alert"
-        android:layout_width="300dp"
-        android:layout_height="200dp"
-        android:visibility="visible"
+    <ImageView
+        android:src="@drawable/alert"
+        tools:ignore="ContentDescription"
+        android:id="@+id/imAlert"
+        android:visibility="gone"
+        android:layout_width="110dp"
+        android:layout_height="130dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-        app:layout_constraintTop_toTopOf="@+id/guidelineTop"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/alert" />
+        app:layout_constraintTop_toTopOf="parent" />
     <ProgressBar
         android:id="@+id/pBar"
         android:layout_width="100dp"

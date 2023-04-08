@@ -11,7 +11,7 @@
         android:id="@+id/txtDayName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
+
         android:padding="10dp"
         android:text="Sun"
         android:textColor="@color/white"
@@ -26,7 +26,7 @@
         android:id="@+id/rvImgWDay"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="13dp"
+
         android:src="@drawable/app_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/txtDayName"
@@ -38,7 +38,7 @@
         android:id="@+id/rvTxtTemp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+
         android:padding="10dp"
         android:text="sunny"
         android:textColor="@color/white"
@@ -53,7 +53,6 @@
         android:id="@+id/rvNumTemp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
         android:padding="10dp"
         android:text="13c"
         android:textColor="@color/white"

@@ -53,9 +53,7 @@ class FragmentFavourite : Fragment(), OnClickInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        /*binding.conFavourite.visibility= View.GONE
-        binding.RVFav.visibility= View.GONE*/
-        binding.animFav.visibility= View.VISIBLE
+        binding.favourite.visibility= View.VISIBLE
         sharedPreference = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         editor = sharedPreference.edit()
         adapterFavourite=AdapterFavourite(emptyList(),requireContext(),this)
@@ -71,23 +69,23 @@ class FragmentFavourite : Fragment(), OnClickInterface {
             viewModel.favWeatherFromRoom.collect { db ->
                 when (db) {
                     is RequestState.Success -> {
-                        binding.pBar.visibility = View.GONE
-                        binding.conFavourite.visibility= View.VISIBLE
-                        binding.RVFav.visibility=View.VISIBLE
-                        db.data?.let { adapterFavourite.setFavList(it) }
-                        binding.RVFav.adapter=adapterFavourite
-                        binding.animFav.visibility= View.GONE
+                        if(db.data.isNullOrEmpty()){
+                            binding.favourite.visibility= View.VISIBLE
+                            binding.conFavourite.visibility= View.GONE
+                        }else{
+                            binding.favourite.visibility= View.GONE
+                            binding.conFavourite.visibility= View.VISIBLE
+                            db.data?.let { adapterFavourite.setFavList(it) }
+                            binding.RVFav.adapter=adapterFavourite
+                        }
                     }
                     is RequestState.Failure -> {
-                        binding.pBar.visibility = View.VISIBLE
                         binding.conFavourite.visibility= View.GONE
-                       binding.RVFav.visibility= View.GONE
+                        binding.favourite.visibility= View.GONE
                         Snackbar.make(requireView(),R.string.problem,Snackbar.LENGTH_SHORT).show()
                     }
                     is RequestState.Loading -> {
-                        binding.conFavourite.visibility= View.GONE
-                        binding.RVFav.visibility= View.GONE
-                        binding.pBar.visibility = View.VISIBLE
+
                     }
                 }
             }

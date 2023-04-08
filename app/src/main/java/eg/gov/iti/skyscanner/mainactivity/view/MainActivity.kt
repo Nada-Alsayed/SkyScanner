@@ -62,9 +62,9 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         } else {
-            if (sharedPreferences.getString(Location, "gps").equals("gps")) {
+           // if (sharedPreferences.getString(Location, "gps").equals("gps")) {
                 getLastLocation()
-            }
+           // }
             toolbar = findViewById(R.id.toolBar)
             setSupportActionBar(toolbar)
             toggle = ActionBarDrawerToggle(
@@ -84,10 +84,10 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onResume() {
         super.onResume()
-        if (sharedPreferences.getString(Location, "gps").equals("gps")) {
+       // if (sharedPreferences.getString(Location, "gps").equals("gps")) {
             if (checkPermissions())
                 getLastLocation()
-        }
+        //}
 
     }
 
